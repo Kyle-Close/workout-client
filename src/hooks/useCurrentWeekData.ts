@@ -4,14 +4,27 @@ import {
   CurrentWeekSchema,
   type CurrentWeek,
 } from "../schemas/currentWeekSchema";
+import { useEffect, useState } from "react";
 
 export function useCurrentWeekData() {
+  const [selectedDay, setSelectedDay] = useState(1);
+
   const { isPending, error, data } = useQuery({
     queryKey: ["currentWeekData"],
     queryFn: () => fetchCurrentWeekData(),
   });
 
-  return { isPending, error, data };
+  const handleDayButtonClick = (isGoBack: boolean) => {
+    setSelectedDay((prevSelectedDay) =>
+      isGoBack ? prevSelectedDay - 1 : prevSelectedDay + 1,
+    );
+  };
+
+  useEffect(() => {
+    if (data) setSelectedDay(data.currentDayOfWeek);
+  }, [data]);
+
+  return { isPending, error, data, handleDayButtonClick, selectedDay };
 }
 
 async function fetchCurrentWeekData(): Promise<CurrentWeek> {

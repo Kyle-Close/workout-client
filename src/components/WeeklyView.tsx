@@ -1,21 +1,62 @@
 import Typography from "@mui/material/Typography";
 import type { ExerciseForDayView } from "../schemas/currentWeekSchema";
-import Box from "@mui/material/Typography";
+import { ExerciseAccordian } from "./ExerciseAccordian";
+import { Box, IconButton, Stack } from "@mui/material";
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
 interface WeeklyViewProps {
-  currentDay: number;
   weekData: ExerciseForDayView[];
+  selectedDay: number;
+  handleDayButtonClick: (isGoBack: boolean) => void;
 }
 
-export function WeeklyView({ currentDay, weekData }: WeeklyViewProps) {
+export function WeeklyView({
+  weekData,
+  selectedDay,
+  handleDayButtonClick,
+}: WeeklyViewProps) {
   const weekNumber = weekData[0].program_week;
+  const minDay = 1;
+  const maxDay = weekData.reduce(
+    (max, data) => Math.max(max, data.workout_day),
+    -Infinity,
+  );
+
+  const disableBackBtn = minDay === selectedDay;
+  const disableForwardBtn = maxDay === selectedDay;
 
   return (
-    <Box className="flex flex-row justify-between items-end">
-      <Typography className="text-amber-700" variant="h4">
-        Week {weekNumber}
-      </Typography>
-      <Typography variant="h6">Day {currentDay}</Typography>
-    </Box>
+    <>
+      <Box className="flex flex-row justify-between items-end pb-4">
+        <Typography className="text-amber-700" variant="h4">
+          Week {weekNumber}
+        </Typography>
+        <Stack direction="row" spacing={2}>
+          <IconButton
+            disabled={disableBackBtn}
+            onClick={() => handleDayButtonClick(true)}
+            size="small"
+          >
+            <ArrowBackIosIcon />
+          </IconButton>
+
+          <Typography variant="h6">Day {selectedDay}</Typography>
+
+          <IconButton
+            disabled={disableForwardBtn}
+            onClick={() => handleDayButtonClick(false)}
+            size="small"
+          >
+            <ArrowForwardIosIcon />
+          </IconButton>
+        </Stack>
+      </Box>
+      {weekData.map((data, key) => {
+        if (selectedDay === data.workout_day) {
+          return <ExerciseAccordian exercise={data} key={key} />;
+        }
+      })}
+    </>
   );
 }

@@ -1,20 +1,19 @@
-import { useQuery } from '@tanstack/react-query';
-import { BASE_URL, PROGRAM_ID, USER_ID } from './globals';
+import { useCurrentWeekData } from "./hooks/useCurrentWeekData";
 
 function App() {
-	const { isPending, error, data } = useQuery({
-		queryKey: ['repoData'],
-		queryFn: () =>
-			fetch(`${BASE_URL}/get-current-week-data?user_id=${USER_ID}&workout_program_id=${PROGRAM_ID}`, {
-			}).then((res) => res.json()),
-	});
+  const { isPending, error, data } = useCurrentWeekData();
 
-	if (isPending) return 'Loading...';
-	if (error) return 'An error has occurred: ' + error.message;
+  if (isPending) return "Loading...";
+  if (error) return "An error has occurred: " + error.message;
+  if (!data) return null;
 
-	console.log(data);
-
-	return <></>;
+  return (
+    <ul>
+      {data.map((log, key) => (
+        <li key={key}>{log.exercise_name}</li>
+      ))}
+    </ul>
+  );
 }
 
 export default App;

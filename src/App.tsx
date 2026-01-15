@@ -1,3 +1,4 @@
+import { WeeklyView } from "./components/WeeklyView";
 import { useCurrentWeekData } from "./hooks/useCurrentWeekData";
 
 function App() {
@@ -8,11 +9,7 @@ function App() {
   if (!data) return null;
 
   return (
-    <ul>
-      {data.map((log, key) => (
-        <li key={key}>{log.exercise_name}</li>
-      ))}
-    </ul>
+    <WeeklyView currentDay={data.currentDayOfWeek} weekData={data.weekData} />
   );
 }
 

@@ -1,7 +1,7 @@
 import Typography from "@mui/material/Typography";
 import type { ExerciseForDayView } from "../schemas/currentWeekSchema";
 import { ExerciseAccordian } from "./ExerciseAccordian";
-import { Box, IconButton, Stack } from "@mui/material";
+import { Box, Button, IconButton, Stack } from "@mui/material";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
@@ -52,11 +52,14 @@ export function WeeklyView({
           </IconButton>
         </Stack>
       </Box>
-      {weekData.map((data, key) => {
-        if (selectedDay === data.workout_day) {
-          return <ExerciseAccordian exercise={data} key={key} />;
-        }
-      })}
+      <Stack component='form'>
+        {weekData.map((data, key) => {
+          if (selectedDay === data.workout_day) {
+            return <ExerciseAccordian exercise={data} key={key} />;
+          }
+        })}
+        <Button sx={{ mt: 2 }} variant="contained" type="submit">Complete Workout</Button>
+      </Stack>
     </>
   );
 }

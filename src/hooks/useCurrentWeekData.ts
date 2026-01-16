@@ -4,9 +4,11 @@ import {
   CurrentWeekSchema,
   type CurrentWeek,
 } from "../schemas/currentWeekSchema";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type FormEvent } from "react";
+import type { ExerciseLogFormItem } from "../components/WeeklyView";
 
 export function useCurrentWeekData() {
+  const [formData, setFormData] = useState<ExerciseLogFormItem[]>([]);
   const [selectedDay, setSelectedDay] = useState(1);
 
   const { isPending, error, data } = useQuery({
@@ -20,11 +22,27 @@ export function useCurrentWeekData() {
     );
   };
 
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault()
+    const res = await fetch(`${BASE_URL}/complete-day`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(formData)
+    })
+    if (!res.ok) throw new Error('Error sending form data')
+  }
+
   useEffect(() => {
     if (data) setSelectedDay(data.currentDayOfWeek);
   }, [data]);
 
-  return { isPending, error, data, handleDayButtonClick, selectedDay };
+  useEffect(() => {
+    console.log(formData)
+  }, [formData]);
+
+  return { isPending, error, data, handleDayButtonClick, selectedDay, formData, setFormData, handleSubmit };
 }
 
 async function fetchCurrentWeekData(): Promise<CurrentWeek> {

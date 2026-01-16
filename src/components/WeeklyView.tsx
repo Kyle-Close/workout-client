@@ -4,19 +4,39 @@ import { ExerciseAccordian } from "./ExerciseAccordian";
 import { Box, Button, IconButton, Stack } from "@mui/material";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import { type FormEvent } from "react";
 
 interface WeeklyViewProps {
   weekData: ExerciseForDayView[];
   selectedDay: number;
   handleDayButtonClick: (isGoBack: boolean) => void;
+  formData: ExerciseLogFormItem[];
+  setFormData: React.Dispatch<React.SetStateAction<ExerciseLogFormItem[]>>
+  handleSubmit: (e: FormEvent) => void
 }
+
+export type ExerciseLogFormItem = {
+  id: number;
+  user_id: number;
+  workout_day_exercise_id: number;
+  program_week: number;
+  weight: number;
+  sets_completed: number;
+  reps_in_reserve: number;
+  notes: string;
+  completed: boolean;
+};
 
 export function WeeklyView({
   weekData,
   selectedDay,
   handleDayButtonClick,
+  formData,
+  setFormData,
+  handleSubmit
 }: WeeklyViewProps) {
   const weekNumber = weekData[0].program_week;
+
   const minDay = 1;
   const maxDay = weekData.reduce(
     (max, data) => Math.max(max, data.workout_day),
@@ -52,10 +72,10 @@ export function WeeklyView({
           </IconButton>
         </Stack>
       </Box>
-      <Stack component='form'>
+      <Stack component='form' onSubmit={handleSubmit}>
         {weekData.map((data, key) => {
           if (selectedDay === data.workout_day) {
-            return <ExerciseAccordian exercise={data} key={key} />;
+            return <ExerciseAccordian exercise={data} key={key} formData={formData} setFormData={setFormData} />;
           }
         })}
         <Button sx={{ mt: 2 }} variant="contained" type="submit">Complete Workout</Button>

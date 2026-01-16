@@ -1,4 +1,3 @@
-
 import * as React from 'react';
 import { NumberField as BaseNumberField } from '@base-ui/react/number-field';
 import Box from '@mui/material/Box';
@@ -15,6 +14,7 @@ export default function NumberSpinner({
   label,
   error,
   size = 'medium',
+  onValueChange,
   ...other
 }: BaseNumberField.Root.Props & {
   label?: React.ReactNode;
@@ -27,6 +27,7 @@ export default function NumberSpinner({
   }
   return (
     <BaseNumberField.Root
+      onValueChange={onValueChange}
       {...other}
       render={(props, state) => (
         <FormControl

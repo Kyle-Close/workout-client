@@ -2,7 +2,7 @@ import { WeeklyView } from "./components/WeeklyView";
 import { useCurrentWeekData } from "./hooks/useCurrentWeekData";
 
 function App() {
-  const { isPending, error, data, selectedDay, handleDayButtonClick } =
+  const { isPending, error, data, selectedDay, handleDayButtonClick, formData, setFormData, handleSubmit } =
     useCurrentWeekData();
 
   if (isPending) return "Loading...";
@@ -14,6 +14,9 @@ function App() {
       weekData={data.weekData}
       selectedDay={selectedDay}
       handleDayButtonClick={handleDayButtonClick}
+      formData={formData}
+      setFormData={setFormData}
+      handleSubmit={handleSubmit}
     />
   );
 }

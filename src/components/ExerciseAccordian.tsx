@@ -4,14 +4,53 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
 import { Box, Stack } from "@mui/material";
 import NumberSpinner from "./NumberSpinner";
+import type { ExerciseLogFormItem } from "./WeeklyView";
+import { USER_ID } from "../globals";
 
 interface ExerciseAccordianProps {
   exercise: ExerciseForDayView;
+  formData: ExerciseLogFormItem[];
+  setFormData: React.Dispatch<React.SetStateAction<ExerciseLogFormItem[]>>
 }
-export function ExerciseAccordian({ exercise }: ExerciseAccordianProps) {
+
+export function ExerciseAccordian({ exercise, formData, setFormData }: ExerciseAccordianProps) {
+
+  const handleSpinnerChange = (value: number | null, isUpdatingSets: boolean) => {
+    if (!value) return
+    setFormData((prevFormData) => {
+      const entry = prevFormData.find((log) => log.id === exercise.exercise_log_id)
+
+      if (!entry) {
+        const item: ExerciseLogFormItem = {
+          id: exercise.exercise_log_id,
+          user_id: USER_ID,
+          workout_day_exercise_id: 0,
+          program_week: exercise.program_week,
+          weight: exercise.weight,
+          sets_completed: isUpdatingSets ? value : exercise.sets_completed ?? 0,
+          reps_in_reserve: !isUpdatingSets ? value : exercise.reps_in_reserve ?? 0,
+          notes: "",
+          completed: true
+        }
+        return [...prevFormData, item]
+      } else {
+        return prevFormData.map(log =>
+          log.id === exercise.exercise_log_id
+            ? {
+              ...log,
+              sets_completed: isUpdatingSets ? value : log.sets_completed,
+              reps_in_reserve: !isUpdatingSets ? value : log.reps_in_reserve
+            }
+            : log
+        )
+      }
+    })
+  }
+
+  const entry = formData.find((log) => log.id === exercise.exercise_log_id)
+
   return (
     <Accordion>
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -37,10 +76,24 @@ export function ExerciseAccordian({ exercise }: ExerciseAccordianProps) {
           </Stack>
           <Stack direction='row' justifyContent='space-between'>
             <Box>
-              <NumberSpinner size="small" label="Sets Completed" min={0} />
+              <NumberSpinner
+                onValueChange={(e) => handleSpinnerChange(e, true)}
+                size="small"
+                label="Sets Completed"
+                min={0}
+                defaultValue={0}
+                value={entry ? entry.sets_completed : exercise.sets_completed ?? 0}
+              />
             </Box>
             <Box>
-              <NumberSpinner size="small" label="Sets Completed" min={0} />
+              <NumberSpinner
+                onValueChange={(e) => handleSpinnerChange(e, false)}
+                size="small"
+                label="Reps in Reserve"
+                min={0}
+                defaultValue={0}
+                value={entry ? entry.reps_in_reserve : exercise.reps_in_reserve ?? 0}
+              />
             </Box>
           </Stack>
         </Stack>

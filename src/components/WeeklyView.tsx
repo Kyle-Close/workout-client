@@ -61,7 +61,7 @@ export function WeeklyView({
   return (
     <>
       <Box className="flex flex-row justify-between items-end pb-4">
-        <Typography className="text-amber-700" variant="h4">
+        <Typography color="error" variant="h4">
           Week {weekNumber}
         </Typography>
         <Stack direction="row" spacing={2}>

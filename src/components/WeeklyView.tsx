@@ -1,7 +1,7 @@
 import Typography from "@mui/material/Typography";
 import type { ExerciseForDayView } from "../schemas/currentWeekSchema";
 import { ExerciseAccordian } from "./ExerciseAccordian";
-import { Alert, Box, Button, IconButton, Stack } from "@mui/material";
+import { Alert, Box, Button, Divider, IconButton, Stack } from "@mui/material";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { type FormEvent } from "react";
@@ -86,27 +86,44 @@ export function WeeklyView({
       </Box>
       <Stack component="form" onSubmit={handleSubmit}>
         {weekData.map((data, key) => {
-          if (selectedDay === data.workout_day) {
+          if (selectedDay === data.workout_day && !data.optional) {
             return (
               <ExerciseAccordian
                 exercise={data}
                 key={key}
                 formData={formData}
                 setFormData={setFormData}
+                titleColor="info"
+              />
+            );
+          }
+        })}
+        <Divider sx={{ m: 2 }}>Optional</Divider>
+        {weekData.map((data, key) => {
+          if (selectedDay === data.workout_day && data.optional) {
+            return (
+              <ExerciseAccordian
+                exercise={data}
+                key={key}
+                formData={formData}
+                setFormData={setFormData}
+                titleColor="secondary"
               />
             );
           }
         })}
         <Button sx={{ mt: 2 }} variant="contained" type="submit">
-          Complete Workout
+          Update Workout Logs
         </Button>
         {completeDayMutation.isSuccess && (
-          <Alert severity="success">Successfully completed workout</Alert>
+          <Alert severity="success">
+            Successfully updated exercise log(s).
+          </Alert>
         )}
         {completeDayMutation.isError && (
           <Alert severity="error">
-            There was an error completing the workout. At least 1 field must be
-            updated. fields have been populated.
+            There was an error updating the logs. At least 1 field must be
+            changed.
           </Alert>
         )}
       </Stack>

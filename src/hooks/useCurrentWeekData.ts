@@ -6,12 +6,12 @@ import {
 } from "../schemas/currentWeekSchema";
 import { useEffect, useState, type FormEvent } from "react";
 import type { ExerciseLogFormItem } from "../components/WeeklyView";
-import { useCompleteDay } from "./useCompleteDay";
+import { useUpdateExerciseLogs } from "./useUpdateExerciseLogs";
 
 export function useCurrentWeekData() {
   const [formData, setFormData] = useState<ExerciseLogFormItem[]>([]);
   const [selectedDay, setSelectedDay] = useState(1);
-  const completeDayMutation = useCompleteDay();
+  const completeDayMutation = useUpdateExerciseLogs();
 
   const currentWeekDataQuery = useQuery({
     queryKey: ["currentWeekData"],
@@ -34,10 +34,6 @@ export function useCurrentWeekData() {
     if (currentWeekDataQuery.data)
       setSelectedDay(currentWeekDataQuery.data.currentDayOfWeek);
   }, [currentWeekDataQuery.data]);
-
-  useEffect(() => {
-    console.log(formData);
-  }, [formData]);
 
   return {
     handleDayButtonClick,

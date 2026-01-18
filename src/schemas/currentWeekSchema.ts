@@ -2,6 +2,7 @@ import * as z from "zod";
 
 export const ExerciseObjectForDayView = z.object({
   exercise_log_id: z.number(),
+  workout_day_exercise_id: z.number(),
   exercise_name: z.string(),
   program_week: z.number(),
   workout_day: z.number(),
@@ -10,6 +11,7 @@ export const ExerciseObjectForDayView = z.object({
   target_reps: z.number(),
   sets_completed: z.number().nullable(),
   reps_in_reserve: z.number().nullable(),
+  optional: z.boolean(),
 });
 
 export const CurrentWeekSchema = z.object({

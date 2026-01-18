@@ -13,12 +13,14 @@ interface ExerciseAccordianProps {
   exercise: ExerciseForDayView;
   formData: ExerciseLogFormItem[];
   setFormData: React.Dispatch<React.SetStateAction<ExerciseLogFormItem[]>>;
+  titleColor: string;
 }
 
 export function ExerciseAccordian({
   exercise,
   formData,
   setFormData,
+  titleColor,
 }: ExerciseAccordianProps) {
   const handleSpinnerChange = (
     value: number | null,
@@ -34,7 +36,7 @@ export function ExerciseAccordian({
         const item: ExerciseLogFormItem = {
           id: exercise.exercise_log_id,
           user_id: USER_ID,
-          workout_day_exercise_id: 0,
+          workout_day_exercise_id: exercise.workout_day_exercise_id,
           program_week: exercise.program_week,
           weight: exercise.weight,
           sets_completed: isUpdatingSets
@@ -66,7 +68,7 @@ export function ExerciseAccordian({
   return (
     <Accordion>
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-        <Typography variant="h6" component="span">
+        <Typography variant="h6" component="span" color={titleColor}>
           {exercise.exercise_name}
         </Typography>
       </AccordionSummary>

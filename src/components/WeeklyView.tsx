@@ -1,18 +1,25 @@
 import Typography from "@mui/material/Typography";
 import type { ExerciseForDayView } from "../schemas/currentWeekSchema";
 import { ExerciseAccordian } from "./ExerciseAccordian";
-import { Box, Button, IconButton, Stack } from "@mui/material";
+import { Alert, Box, Button, IconButton, Stack } from "@mui/material";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { type FormEvent } from "react";
+import type { UseMutationResult } from "@tanstack/react-query";
 
 interface WeeklyViewProps {
   weekData: ExerciseForDayView[];
   selectedDay: number;
   handleDayButtonClick: (isGoBack: boolean) => void;
   formData: ExerciseLogFormItem[];
-  setFormData: React.Dispatch<React.SetStateAction<ExerciseLogFormItem[]>>
-  handleSubmit: (e: FormEvent) => void
+  setFormData: React.Dispatch<React.SetStateAction<ExerciseLogFormItem[]>>;
+  handleSubmit: (e: FormEvent) => void;
+  completeDayMutation: UseMutationResult<
+    any,
+    Error,
+    ExerciseLogFormItem[],
+    unknown
+  >;
 }
 
 export type ExerciseLogFormItem = {
@@ -33,7 +40,8 @@ export function WeeklyView({
   handleDayButtonClick,
   formData,
   setFormData,
-  handleSubmit
+  handleSubmit,
+  completeDayMutation,
 }: WeeklyViewProps) {
   const weekNumber = weekData[0].program_week;
 
@@ -45,6 +53,10 @@ export function WeeklyView({
 
   const disableBackBtn = minDay === selectedDay;
   const disableForwardBtn = maxDay === selectedDay;
+
+  if (completeDayMutation.isPending) {
+    return <p>Submitting...</p>;
+  }
 
   return (
     <>
@@ -72,13 +84,31 @@ export function WeeklyView({
           </IconButton>
         </Stack>
       </Box>
-      <Stack component='form' onSubmit={handleSubmit}>
+      <Stack component="form" onSubmit={handleSubmit}>
         {weekData.map((data, key) => {
           if (selectedDay === data.workout_day) {
-            return <ExerciseAccordian exercise={data} key={key} formData={formData} setFormData={setFormData} />;
+            return (
+              <ExerciseAccordian
+                exercise={data}
+                key={key}
+                formData={formData}
+                setFormData={setFormData}
+              />
+            );
           }
         })}
-        <Button sx={{ mt: 2 }} variant="contained" type="submit">Complete Workout</Button>
+        <Button sx={{ mt: 2 }} variant="contained" type="submit">
+          Complete Workout
+        </Button>
+        {completeDayMutation.isSuccess && (
+          <Alert severity="success">Successfully completed workout</Alert>
+        )}
+        {completeDayMutation.isError && (
+          <Alert severity="error">
+            There was an error completing the workout. At least 1 field must be
+            updated. fields have been populated.
+          </Alert>
+        )}
       </Stack>
     </>
   );

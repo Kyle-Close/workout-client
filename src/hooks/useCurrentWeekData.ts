@@ -6,43 +6,48 @@ import {
 } from "../schemas/currentWeekSchema";
 import { useEffect, useState, type FormEvent } from "react";
 import type { ExerciseLogFormItem } from "../components/WeeklyView";
+import { useCompleteDay } from "./useCompleteDay";
 
 export function useCurrentWeekData() {
   const [formData, setFormData] = useState<ExerciseLogFormItem[]>([]);
   const [selectedDay, setSelectedDay] = useState(1);
+  const completeDayMutation = useCompleteDay();
 
-  const { isPending, error, data } = useQuery({
+  const currentWeekDataQuery = useQuery({
     queryKey: ["currentWeekData"],
     queryFn: () => fetchCurrentWeekData(),
   });
 
   const handleDayButtonClick = (isGoBack: boolean) => {
+    completeDayMutation.reset();
     setSelectedDay((prevSelectedDay) =>
       isGoBack ? prevSelectedDay - 1 : prevSelectedDay + 1,
     );
   };
 
   const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault()
-    const res = await fetch(`${BASE_URL}/complete-day`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(formData)
-    })
-    if (!res.ok) throw new Error('Error sending form data')
-  }
+    e.preventDefault();
+    completeDayMutation.mutate(formData);
+  };
 
   useEffect(() => {
-    if (data) setSelectedDay(data.currentDayOfWeek);
-  }, [data]);
+    if (currentWeekDataQuery.data)
+      setSelectedDay(currentWeekDataQuery.data.currentDayOfWeek);
+  }, [currentWeekDataQuery.data]);
 
   useEffect(() => {
-    console.log(formData)
+    console.log(formData);
   }, [formData]);
 
-  return { isPending, error, data, handleDayButtonClick, selectedDay, formData, setFormData, handleSubmit };
+  return {
+    handleDayButtonClick,
+    selectedDay,
+    formData,
+    setFormData,
+    handleSubmit,
+    currentWeekDataQuery,
+    completeDayMutation,
+  };
 }
 
 async function fetchCurrentWeekData(): Promise<CurrentWeek> {

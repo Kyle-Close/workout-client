@@ -2,21 +2,30 @@ import { WeeklyView } from "./components/WeeklyView";
 import { useCurrentWeekData } from "./hooks/useCurrentWeekData";
 
 function App() {
-  const { isPending, error, data, selectedDay, handleDayButtonClick, formData, setFormData, handleSubmit } =
-    useCurrentWeekData();
+  const {
+    selectedDay,
+    handleDayButtonClick,
+    formData,
+    setFormData,
+    handleSubmit,
+    currentWeekDataQuery,
+    completeDayMutation,
+  } = useCurrentWeekData();
 
-  if (isPending) return "Loading...";
-  if (error) return "An error has occurred: " + error.message;
-  if (!data) return null;
+  if (currentWeekDataQuery.isPending) return "Loading...";
+  if (currentWeekDataQuery.error)
+    return "An error has occurred: " + currentWeekDataQuery.error.message;
+  if (!currentWeekDataQuery.data) return null;
 
   return (
     <WeeklyView
-      weekData={data.weekData}
+      weekData={currentWeekDataQuery.data.weekData}
       selectedDay={selectedDay}
       handleDayButtonClick={handleDayButtonClick}
       formData={formData}
       setFormData={setFormData}
       handleSubmit={handleSubmit}
+      completeDayMutation={completeDayMutation}
     />
   );
 }

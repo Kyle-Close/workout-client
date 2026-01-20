@@ -26,7 +26,8 @@ export function ExerciseAccordian({
     value: number | null,
     isUpdatingSets: boolean,
   ) => {
-    if (!value) return;
+    if (value === null || value === undefined) return;
+
     setFormData((prevFormData) => {
       const entry = prevFormData.find(
         (log) => log.id === exercise.exercise_log_id,
@@ -73,7 +74,7 @@ export function ExerciseAccordian({
         </Typography>
       </AccordionSummary>
       <AccordionDetails>
-        <Stack spacing={2} ml={2} mr={2}>
+        <Stack spacing={2} ml={1} mr={1}>
           <Stack direction="row" justifyContent="space-around">
             <Stack direction="row" spacing={1}>
               <Typography fontWeight="medium" color="primary">
@@ -94,7 +95,7 @@ export function ExerciseAccordian({
               <Typography>{exercise.target_reps}</Typography>
             </Stack>
           </Stack>
-          <Stack direction="row" spacing={2} justifyContent="space-between">
+          <Stack direction="row" spacing={1} justifyContent="space-between">
             <Box>
               <NumberSpinner
                 onValueChange={(e) => handleSpinnerChange(e, true)}
@@ -112,7 +113,6 @@ export function ExerciseAccordian({
                 onValueChange={(e) => handleSpinnerChange(e, false)}
                 size="small"
                 label="Reps in Reserve"
-                min={0}
                 defaultValue={0}
                 value={
                   entry

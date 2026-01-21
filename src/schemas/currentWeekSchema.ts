@@ -12,6 +12,7 @@ export const ExerciseObjectForDayView = z.object({
   sets_completed: z.number().nullable(),
   reps_in_reserve: z.number().nullable(),
   optional: z.boolean(),
+  completed: z.boolean()
 });
 
 export const CurrentWeekSchema = z.object({

@@ -4,23 +4,22 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { Box, Stack } from "@mui/material";
+import { Box, Divider, Stack } from "@mui/material";
 import NumberSpinner from "./NumberSpinner";
 import type { ExerciseLogFormItem } from "./WeeklyView";
 import { USER_ID } from "../globals";
+import DoneAllIcon from '@mui/icons-material/DoneAll';
 
 interface ExerciseAccordianProps {
   exercise: ExerciseForDayView;
   formData: ExerciseLogFormItem[];
   setFormData: React.Dispatch<React.SetStateAction<ExerciseLogFormItem[]>>;
-  titleColor: string;
 }
 
 export function ExerciseAccordian({
   exercise,
   formData,
   setFormData,
-  titleColor,
 }: ExerciseAccordianProps) {
   const handleSpinnerChange = (
     value: number | null,
@@ -54,10 +53,10 @@ export function ExerciseAccordian({
         return prevFormData.map((log) =>
           log.id === exercise.exercise_log_id
             ? {
-                ...log,
-                sets_completed: isUpdatingSets ? value : log.sets_completed,
-                reps_in_reserve: !isUpdatingSets ? value : log.reps_in_reserve,
-              }
+              ...log,
+              sets_completed: isUpdatingSets ? value : log.sets_completed,
+              reps_in_reserve: !isUpdatingSets ? value : log.reps_in_reserve,
+            }
             : log,
         );
       }
@@ -69,9 +68,12 @@ export function ExerciseAccordian({
   return (
     <Accordion>
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-        <Typography variant="h6" component="span" color={titleColor}>
-          {exercise.exercise_name}
-        </Typography>
+        <Stack gap={2} flexDirection={'row'} alignItems={'center'}>
+          {exercise.completed && <DoneAllIcon color="success" />}
+          <Typography variant="h6" component="span" color={exercise.completed ? 'success' : ''}>
+            {exercise.exercise_name}
+          </Typography>
+        </Stack>
       </AccordionSummary>
       <AccordionDetails>
         <Stack spacing={2} ml={1} mr={1}>
@@ -95,33 +97,46 @@ export function ExerciseAccordian({
               <Typography>{exercise.target_reps}</Typography>
             </Stack>
           </Stack>
-          <Stack direction="row" spacing={1} justifyContent="space-between">
-            <Box>
-              <NumberSpinner
-                onValueChange={(e) => handleSpinnerChange(e, true)}
-                size="small"
-                label="Sets Completed"
-                min={0}
-                defaultValue={0}
-                value={
-                  entry ? entry.sets_completed : (exercise.sets_completed ?? 0)
-                }
-              />
-            </Box>
-            <Box>
-              <NumberSpinner
-                onValueChange={(e) => handleSpinnerChange(e, false)}
-                size="small"
-                label="Reps in Reserve"
-                defaultValue={0}
-                value={
-                  entry
-                    ? entry.reps_in_reserve
-                    : (exercise.reps_in_reserve ?? 0)
-                }
-              />
-            </Box>
-          </Stack>
+          <Divider />
+          {!exercise.completed ?
+            <Stack direction="row" spacing={1} justifyContent="space-between">
+              <Box>
+                <NumberSpinner
+                  onValueChange={(e) => handleSpinnerChange(e, true)}
+                  size="small"
+                  label="Sets Completed"
+                  min={0}
+                  defaultValue={0}
+                  value={
+                    entry ? entry.sets_completed : (exercise.sets_completed ?? 0)
+                  }
+                />
+              </Box>
+              <Box>
+                <NumberSpinner
+                  onValueChange={(e) => handleSpinnerChange(e, false)}
+                  size="small"
+                  label="Reps in Reserve"
+                  defaultValue={0}
+                  value={
+                    entry
+                      ? entry.reps_in_reserve
+                      : (exercise.reps_in_reserve ?? 0)
+                  }
+                />
+              </Box>
+            </Stack> :
+            <Stack flexDirection={'row'} justifyContent={'space-around'}>
+              <Stack alignItems={'center'} gap={1}>
+                <Typography fontWeight={'medium'}>Sets Completed</Typography>
+                <Typography color={exercise.sets_completed && exercise.sets_completed >= exercise.target_sets ? 'success' : 'error'}>{exercise.sets_completed}</Typography>
+              </Stack>
+              <Stack alignItems={'center'} gap={1}>
+                <Typography fontWeight={'medium'}>Reps in Reserve</Typography>
+                <Typography color={exercise.reps_in_reserve && exercise.reps_in_reserve >= 0 ? 'success' : 'error'}>{exercise.reps_in_reserve}</Typography>
+              </Stack>
+            </Stack>
+          }
         </Stack>
       </AccordionDetails>
     </Accordion>

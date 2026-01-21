@@ -93,7 +93,6 @@ export function WeeklyView({
                 key={key}
                 formData={formData}
                 setFormData={setFormData}
-                titleColor="info"
               />
             );
           }
@@ -107,13 +106,12 @@ export function WeeklyView({
                 key={key}
                 formData={formData}
                 setFormData={setFormData}
-                titleColor="secondary"
               />
             );
           }
         })}
-        <Button sx={{ mt: 2 }} variant="contained" type="submit">
-          Update Workout Logs
+        <Button disabled={formData.length === 0} sx={{ mt: 2 }} variant="contained" type="submit">
+          Log Exercises
         </Button>
         {completeDayMutation.isSuccess && (
           <Alert severity="success">

@@ -1,4 +1,3 @@
-import CustomAppBar from "./components/CustomAppBar";
 import { WeeklyView } from "./components/WeeklyView";
 import { useCurrentWeekData } from "./hooks/useCurrentWeekData";
 
@@ -19,18 +18,15 @@ function App() {
   if (!currentWeekDataQuery.data) return null;
 
   return (
-    <>
-      <CustomAppBar />
-      <WeeklyView
-        weekData={currentWeekDataQuery.data.weekData}
-        selectedDay={selectedDay}
-        handleDayButtonClick={handleDayButtonClick}
-        formData={formData}
-        setFormData={setFormData}
-        handleSubmit={handleSubmit}
-        completeDayMutation={completeDayMutation}
-      />
-    </>
+    <WeeklyView
+      weekData={currentWeekDataQuery.data.weekData}
+      selectedDay={selectedDay}
+      handleDayButtonClick={handleDayButtonClick}
+      formData={formData}
+      setFormData={setFormData}
+      handleSubmit={handleSubmit}
+      completeDayMutation={completeDayMutation}
+    />
   );
 }
 

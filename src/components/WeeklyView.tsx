@@ -59,9 +59,9 @@ export function WeeklyView({
   }
 
   return (
-    <>
+    <Box padding={3}>
       <Box className="flex flex-row justify-between items-end pb-4">
-        <Typography color="error" variant="h4">
+        <Typography color="primary" variant="h4">
           Week {weekNumber}
         </Typography>
         <Stack direction="row" spacing={2}>
@@ -73,7 +73,7 @@ export function WeeklyView({
             <ArrowBackIosIcon />
           </IconButton>
 
-          <Typography variant="h6">Day {selectedDay}</Typography>
+          <Typography color="secondary" variant="h6">Day {selectedDay}</Typography>
 
           <IconButton
             disabled={disableForwardBtn}
@@ -125,6 +125,6 @@ export function WeeklyView({
           </Alert>
         )}
       </Stack>
-    </>
+    </Box>
   );
 }

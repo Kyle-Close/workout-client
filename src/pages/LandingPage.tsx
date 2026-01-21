@@ -1,7 +1,7 @@
-import { WeeklyView } from "./components/WeeklyView";
-import { useCurrentWeekData } from "./hooks/useCurrentWeekData";
+import { WeeklyView } from "../components/WeeklyView";
+import { useCurrentWeekData } from "../hooks/useCurrentWeekData";
 
-function App() {
+export default function LandingPage() {
   const {
     selectedDay,
     handleDayButtonClick,
@@ -29,5 +29,3 @@ function App() {
     />
   );
 }
-
-export default App;

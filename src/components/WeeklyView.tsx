@@ -97,7 +97,9 @@ export function WeeklyView({
             );
           }
         })}
-        <Divider sx={{ m: 2 }}>Optional</Divider>
+        <Divider sx={{ m: 2, '& .MuiDivider-wrapper': { fontStyle: 'italic' } }}>
+          Optional
+        </Divider>
         {weekData.map((data, key) => {
           if (selectedDay === data.workout_day && data.optional) {
             return (

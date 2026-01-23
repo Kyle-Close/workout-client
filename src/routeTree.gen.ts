@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as AccountRouteImport } from './routes/account'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as OneRepMaxUserIdRouteImport } from './routes/one-rep-max/$userId'
 
 const AccountRoute = AccountRouteImport.update({
   id: '/account',
@@ -22,31 +23,40 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OneRepMaxUserIdRoute = OneRepMaxUserIdRouteImport.update({
+  id: '/one-rep-max/$userId',
+  path: '/one-rep-max/$userId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/account': typeof AccountRoute
+  '/one-rep-max/$userId': typeof OneRepMaxUserIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/account': typeof AccountRoute
+  '/one-rep-max/$userId': typeof OneRepMaxUserIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/account': typeof AccountRoute
+  '/one-rep-max/$userId': typeof OneRepMaxUserIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/account'
+  fullPaths: '/' | '/account' | '/one-rep-max/$userId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/account'
-  id: '__root__' | '/' | '/account'
+  to: '/' | '/account' | '/one-rep-max/$userId'
+  id: '__root__' | '/' | '/account' | '/one-rep-max/$userId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AccountRoute: typeof AccountRoute
+  OneRepMaxUserIdRoute: typeof OneRepMaxUserIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -65,12 +75,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/one-rep-max/$userId': {
+      id: '/one-rep-max/$userId'
+      path: '/one-rep-max/$userId'
+      fullPath: '/one-rep-max/$userId'
+      preLoaderRoute: typeof OneRepMaxUserIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AccountRoute: AccountRoute,
+  OneRepMaxUserIdRoute: OneRepMaxUserIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

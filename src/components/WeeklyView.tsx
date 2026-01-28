@@ -58,10 +58,26 @@ export function WeeklyView({
     return <p>Submitting...</p>;
   }
 
+  const bgCss =
+    "linear-gradient(270deg,rgba(144, 202, 249, 1) 0%, rgba(84, 136, 179, 1) 50%, rgba(36, 60, 77, 1) 100%);";
+
+  const bgCss2 =
+    "linear-gradient(270deg,rgba(206, 147, 216, 1) 0%, rgba(145, 90, 153, 1) 50%, rgba(97, 55, 99, 1) 100%);";
+
   return (
     <Box padding={3}>
       <Box className="flex flex-row justify-between items-end pb-4">
-        <Typography color="primary" variant="h4">
+        <Typography
+          color="primary"
+          variant="h4"
+          sx={{
+            background: bgCss,
+            backgroundClip: "text",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            color: "transparent",
+          }}
+        >
           Week {weekNumber}
         </Typography>
         <Stack direction="row" spacing={2}>
@@ -73,7 +89,19 @@ export function WeeklyView({
             <ArrowBackIosIcon />
           </IconButton>
 
-          <Typography color="secondary" variant="h6">Day {selectedDay}</Typography>
+          <Typography
+            color="secondary"
+            variant="h6"
+            sx={{
+              background: bgCss2,
+              backgroundClip: "text",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              color: "transparent",
+            }}
+          >
+            Day {selectedDay}
+          </Typography>
 
           <IconButton
             disabled={disableForwardBtn}
@@ -89,6 +117,7 @@ export function WeeklyView({
           if (selectedDay === data.workout_day && !data.optional) {
             return (
               <ExerciseAccordian
+                titleFontWeight={"500"}
                 exercise={data}
                 key={key}
                 formData={formData}
@@ -97,13 +126,16 @@ export function WeeklyView({
             );
           }
         })}
-        <Divider sx={{ m: 2, '& .MuiDivider-wrapper': { fontStyle: 'italic' } }}>
+        <Divider
+          sx={{ m: 2, "& .MuiDivider-wrapper": { fontStyle: "italic" } }}
+        >
           Optional
         </Divider>
         {weekData.map((data, key) => {
           if (selectedDay === data.workout_day && data.optional) {
             return (
               <ExerciseAccordian
+                titleFontWeight="lighter"
                 exercise={data}
                 key={key}
                 formData={formData}
@@ -112,7 +144,12 @@ export function WeeklyView({
             );
           }
         })}
-        <Button disabled={formData.length === 0} sx={{ mt: 2 }} variant="contained" type="submit">
+        <Button
+          disabled={formData.length === 0}
+          sx={{ mt: 2 }}
+          variant="contained"
+          type="submit"
+        >
           Log Exercises
         </Button>
         {completeDayMutation.isSuccess && (

@@ -8,15 +8,17 @@ import { Box, Divider, Stack } from "@mui/material";
 import NumberSpinner from "./NumberSpinner";
 import type { ExerciseLogFormItem } from "./WeeklyView";
 import { USER_ID } from "../globals";
-import DoneAllIcon from '@mui/icons-material/DoneAll';
+import DoneAllIcon from "@mui/icons-material/DoneAll";
 
 interface ExerciseAccordianProps {
+  titleFontWeight: string;
   exercise: ExerciseForDayView;
   formData: ExerciseLogFormItem[];
   setFormData: React.Dispatch<React.SetStateAction<ExerciseLogFormItem[]>>;
 }
 
 export function ExerciseAccordian({
+  titleFontWeight,
   exercise,
   formData,
   setFormData,
@@ -53,10 +55,10 @@ export function ExerciseAccordian({
         return prevFormData.map((log) =>
           log.id === exercise.exercise_log_id
             ? {
-              ...log,
-              sets_completed: isUpdatingSets ? value : log.sets_completed,
-              reps_in_reserve: !isUpdatingSets ? value : log.reps_in_reserve,
-            }
+                ...log,
+                sets_completed: isUpdatingSets ? value : log.sets_completed,
+                reps_in_reserve: !isUpdatingSets ? value : log.reps_in_reserve,
+              }
             : log,
         );
       }
@@ -68,9 +70,14 @@ export function ExerciseAccordian({
   return (
     <Accordion>
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-        <Stack gap={2} flexDirection={'row'} alignItems={'center'}>
+        <Stack gap={2} flexDirection={"row"} alignItems={"center"}>
           {exercise.completed && <DoneAllIcon color="success" />}
-          <Typography variant="h6" component="span" color={exercise.completed ? 'success' : ''}>
+          <Typography
+            fontWeight={titleFontWeight}
+            variant="h6"
+            component="span"
+            color={exercise.completed ? "success" : ""}
+          >
             {exercise.exercise_name}
           </Typography>
         </Stack>
@@ -98,7 +105,7 @@ export function ExerciseAccordian({
             </Stack>
           </Stack>
           <Divider />
-          {!exercise.completed ?
+          {!exercise.completed ? (
             <Stack direction="row" spacing={1} justifyContent="space-between">
               <Box>
                 <NumberSpinner
@@ -108,7 +115,9 @@ export function ExerciseAccordian({
                   min={0}
                   defaultValue={0}
                   value={
-                    entry ? entry.sets_completed : (exercise.sets_completed ?? 0)
+                    entry
+                      ? entry.sets_completed
+                      : (exercise.sets_completed ?? 0)
                   }
                 />
               </Box>
@@ -125,18 +134,36 @@ export function ExerciseAccordian({
                   }
                 />
               </Box>
-            </Stack> :
-            <Stack flexDirection={'row'} justifyContent={'space-around'}>
-              <Stack alignItems={'center'} gap={1}>
-                <Typography fontWeight={'medium'}>Sets Completed</Typography>
-                <Typography color={exercise.sets_completed && exercise.sets_completed >= exercise.target_sets ? 'success' : 'error'}>{exercise.sets_completed}</Typography>
+            </Stack>
+          ) : (
+            <Stack flexDirection={"row"} justifyContent={"space-around"}>
+              <Stack alignItems={"center"} gap={1}>
+                <Typography fontWeight={"medium"}>Sets Completed</Typography>
+                <Typography
+                  color={
+                    exercise.sets_completed &&
+                    exercise.sets_completed >= exercise.target_sets
+                      ? "success"
+                      : "error"
+                  }
+                >
+                  {exercise.sets_completed}
+                </Typography>
               </Stack>
-              <Stack alignItems={'center'} gap={1}>
-                <Typography fontWeight={'medium'}>Reps in Reserve</Typography>
-                <Typography color={exercise.reps_in_reserve && exercise.reps_in_reserve >= 0 ? 'success' : 'error'}>{exercise.reps_in_reserve}</Typography>
+              <Stack alignItems={"center"} gap={1}>
+                <Typography fontWeight={"medium"}>Reps in Reserve</Typography>
+                <Typography
+                  color={
+                    exercise.reps_in_reserve && exercise.reps_in_reserve >= 0
+                      ? "success"
+                      : "error"
+                  }
+                >
+                  {exercise.reps_in_reserve}
+                </Typography>
               </Stack>
             </Stack>
-          }
+          )}
         </Stack>
       </AccordionDetails>
     </Accordion>

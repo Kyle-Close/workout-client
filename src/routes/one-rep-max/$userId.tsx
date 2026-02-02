@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useOneRepMax } from "../../hooks/useOneRepMax";
 import OneRepMaxTable from "../../components/OneRepMaxTable";
-import { Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 
 export const Route = createFileRoute("/one-rep-max/$userId")({
   component: OneRepMaxPage,
@@ -21,9 +21,6 @@ function OneRepMaxPage() {
 
   return (
     <Box p={1}>
-      <Typography p={4} variant="h5" color="primary">
-        One Rep Maxes
-      </Typography>
       <OneRepMaxTable data={oneRepMaxQuery.data} />
     </Box>
   );

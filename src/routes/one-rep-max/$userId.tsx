@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useOneRepMax } from "../../hooks/useOneRepMax";
 
 export const Route = createFileRoute("/one-rep-max/$userId")({
   component: OneRepMaxPage,
@@ -6,10 +7,23 @@ export const Route = createFileRoute("/one-rep-max/$userId")({
 
 function OneRepMaxPage() {
   const { userId } = Route.useParams();
+  const { oneRepMaxQuery } = useOneRepMax(userId);
 
-  return (
-    <div>
-      <h1>One Rep Max for User: {userId}</h1>
-    </div>
-  );
+  if (oneRepMaxQuery.isPending) {
+    return <div>Loading...</div>;
+  }
+
+  if (oneRepMaxQuery.isError) {
+    return <div>{oneRepMaxQuery.error.message}</div>;
+  }
+
+  console.log(oneRepMaxQuery.data);
+
+  return oneRepMaxQuery.data.map((el) => (
+    <>
+      <div>{el.exercise_name}</div>
+      <div>{el.original_one_rep_max}</div>
+      <div>{el.current_one_rep_max}</div>
+    </>
+  ));
 }

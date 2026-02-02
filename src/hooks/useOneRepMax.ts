@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { BASE_URL, USER_ID } from "../globals";
+import { BASE_URL } from "../globals";
 import { OneRepMaxSchema } from "../schemas/oneRepMaxesSchema";
 
 export function useOneRepMax(userId: string) {

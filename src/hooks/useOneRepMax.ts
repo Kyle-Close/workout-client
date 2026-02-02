@@ -4,7 +4,7 @@ import { OneRepMaxSchema } from "../schemas/oneRepMaxesSchema";
 
 export function useOneRepMax(userId: string) {
   const oneRepMaxQuery = useQuery({
-    queryKey: ["currentWeekData"],
+    queryKey: ["oneRepMax", userId],
     queryFn: async () => {
       const res = await fetch(`${BASE_URL}/one-rep-maxes?user_id=${userId}`);
       if (!res.ok) throw new Error("Failed to fetch user one rep maxes");

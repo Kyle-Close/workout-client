@@ -9,4 +9,6 @@ export const OneRepMax = z.object({
 });
 
 export const OneRepMaxSchema = z.array(OneRepMax);
+
 export type OneRepMaxResponse = z.infer<typeof OneRepMaxSchema>;
+export type OneRepMax = z.infer<typeof OneRepMax>;

@@ -43,6 +43,8 @@ export function WeeklyView({
   handleSubmit,
   completeDayMutation,
 }: WeeklyViewProps) {
+  console.log("rendering weekly view component");
+  console.log(weekData);
   const weekNumber = weekData[0].program_week;
 
   const minDay = 1;

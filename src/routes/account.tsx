@@ -1,7 +1,7 @@
 import { Box, Stack, Typography } from "@mui/material";
 import { createFileRoute } from "@tanstack/react-router";
 import { AccountLink } from "../components/AccountLink";
-import { USER_ID } from "../globals";
+import { PROGRAM_ID, USER_ID } from "../globals";
 
 export const Route = createFileRoute("/account")({
   component: RouteComponent,
@@ -20,7 +20,11 @@ function RouteComponent() {
           title="One Rep Maxes"
           params={{ userId: USER_ID }}
         />
-        <AccountLink url="/history" title="Workout History" />
+        <AccountLink
+          url="/history/$userId/$workoutProgramId"
+          title="Workout History"
+          params={{ userId: USER_ID, workoutProgramId: PROGRAM_ID }}
+        />
       </Stack>
     </Box>
   );

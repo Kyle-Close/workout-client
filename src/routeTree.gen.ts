@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AccountRouteImport } from './routes/account'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as OneRepMaxUserIdRouteImport } from './routes/one-rep-max/$userId'
+import { Route as HistoryUserIdWorkoutProgramIdRouteImport } from './routes/history/$userId.$workoutProgramId'
 
 const AccountRoute = AccountRouteImport.update({
   id: '/account',
@@ -28,35 +29,58 @@ const OneRepMaxUserIdRoute = OneRepMaxUserIdRouteImport.update({
   path: '/one-rep-max/$userId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const HistoryUserIdWorkoutProgramIdRoute =
+  HistoryUserIdWorkoutProgramIdRouteImport.update({
+    id: '/history/$userId/$workoutProgramId',
+    path: '/history/$userId/$workoutProgramId',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/account': typeof AccountRoute
   '/one-rep-max/$userId': typeof OneRepMaxUserIdRoute
+  '/history/$userId/$workoutProgramId': typeof HistoryUserIdWorkoutProgramIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/account': typeof AccountRoute
   '/one-rep-max/$userId': typeof OneRepMaxUserIdRoute
+  '/history/$userId/$workoutProgramId': typeof HistoryUserIdWorkoutProgramIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/account': typeof AccountRoute
   '/one-rep-max/$userId': typeof OneRepMaxUserIdRoute
+  '/history/$userId/$workoutProgramId': typeof HistoryUserIdWorkoutProgramIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/account' | '/one-rep-max/$userId'
+  fullPaths:
+    | '/'
+    | '/account'
+    | '/one-rep-max/$userId'
+    | '/history/$userId/$workoutProgramId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/account' | '/one-rep-max/$userId'
-  id: '__root__' | '/' | '/account' | '/one-rep-max/$userId'
+  to:
+    | '/'
+    | '/account'
+    | '/one-rep-max/$userId'
+    | '/history/$userId/$workoutProgramId'
+  id:
+    | '__root__'
+    | '/'
+    | '/account'
+    | '/one-rep-max/$userId'
+    | '/history/$userId/$workoutProgramId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AccountRoute: typeof AccountRoute
   OneRepMaxUserIdRoute: typeof OneRepMaxUserIdRoute
+  HistoryUserIdWorkoutProgramIdRoute: typeof HistoryUserIdWorkoutProgramIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -82,6 +106,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OneRepMaxUserIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/history/$userId/$workoutProgramId': {
+      id: '/history/$userId/$workoutProgramId'
+      path: '/history/$userId/$workoutProgramId'
+      fullPath: '/history/$userId/$workoutProgramId'
+      preLoaderRoute: typeof HistoryUserIdWorkoutProgramIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -89,6 +120,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AccountRoute: AccountRoute,
   OneRepMaxUserIdRoute: OneRepMaxUserIdRoute,
+  HistoryUserIdWorkoutProgramIdRoute: HistoryUserIdWorkoutProgramIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

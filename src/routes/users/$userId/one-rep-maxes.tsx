@@ -1,13 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useOneRepMax } from "../../hooks/useOneRepMax";
-import OneRepMaxTable from "../../components/OneRepMaxTable";
+import OneRepMaxTable from "../../../components/OneRepMaxTable";
 import { Box } from "@mui/material";
+import { useOneRepMax } from "../../../hooks/useOneRepMax";
 
-export const Route = createFileRoute("/one-rep-max/$userId")({
-  component: OneRepMaxPage,
+export const Route = createFileRoute("/users/$userId/one-rep-maxes")({
+  component: RouteComponent,
 });
 
-function OneRepMaxPage() {
+function RouteComponent() {
   const { userId } = Route.useParams();
   const { oneRepMaxQuery } = useOneRepMax(userId);
 

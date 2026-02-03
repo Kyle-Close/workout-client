@@ -4,6 +4,7 @@ import Button from "@mui/material/Button";
 import { AppBar, IconButton } from "@mui/material";
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import { useNavigate } from "@tanstack/react-router";
+import { USER_ID } from "../globals";
 
 export default function CustomAppBar() {
   const navigate = useNavigate();
@@ -23,7 +24,10 @@ export default function CustomAppBar() {
               <FitnessCenterIcon fontSize="large" color="warning" />
             </IconButton>
           </Box>
-          <Button onClick={() => navigate({ to: "/account" })} color="inherit">
+          <Button
+            onClick={() => navigate({ to: `/users/${USER_ID}/account` })}
+            color="inherit"
+          >
             Account
           </Button>
         </Toolbar>

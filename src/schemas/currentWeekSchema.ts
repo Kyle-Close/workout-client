@@ -12,13 +12,15 @@ export const ExerciseObjectForDayView = z.object({
   sets_completed: z.number().nullable(),
   reps_in_reserve: z.number().nullable(),
   optional: z.boolean(),
-  completed: z.boolean()
+  completed: z.boolean(),
 });
 
 export const CurrentWeekSchema = z.object({
   currentDayOfWeek: z.number(),
   weekData: z.array(ExerciseObjectForDayView),
 });
+
+export const WeekLogsSchema = z.array(ExerciseObjectForDayView);
 
 export type CurrentWeek = z.infer<typeof CurrentWeekSchema>;
 export type ExerciseForDayView = z.infer<typeof ExerciseObjectForDayView>;

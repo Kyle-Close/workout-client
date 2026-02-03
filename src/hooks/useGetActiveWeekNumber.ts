@@ -4,7 +4,10 @@ import z from "zod";
 
 const ActiveWeekSchema = z.number();
 
-export function useGetActiveWeek(userId: number, workoutProgramId: number) {
+export function useGetActiveWeekNumber(
+  userId: number,
+  workoutProgramId: number,
+) {
   const getActiveWeekQuery = useQuery({
     queryKey: ["activeWeek", userId, workoutProgramId],
     queryFn: async () => {

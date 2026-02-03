@@ -1,36 +1,31 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { WeeklyView } from "../components/WeeklyView";
-import { useCurrentWeekData } from "../hooks/useCurrentWeekData";
+import { useDaySelector } from "../hooks/useDaySelector";
+import { useGetActiveWeekLogs } from "../hooks/useGetActiveWeekLogs";
+import { useEffect } from "react";
 
 export const Route = createFileRoute("/")({
   component: LandingPage,
 });
 
 function LandingPage() {
-  const {
-    selectedDay,
-    handleDayButtonClick,
-    formData,
-    setFormData,
-    handleSubmit,
-    currentWeekDataQuery,
-    completeDayMutation,
-  } = useCurrentWeekData();
+  const { selectedDay, setSelectedDay, handleDayButtonClick } =
+    useDaySelector();
+  const query = useGetActiveWeekLogs();
 
-  if (currentWeekDataQuery.isPending) return "Loading...";
-  if (currentWeekDataQuery.error)
-    return "An error has occurred: " + currentWeekDataQuery.error.message;
-  if (!currentWeekDataQuery.data) return null;
+  useEffect(() => {
+    if (query.data) setSelectedDay(query.data.currentDayOfWeek);
+  }, [query.data?.currentDayOfWeek, setSelectedDay]);
+
+  if (query.isPending) return "Loading...";
+  if (query.error) return "An error has occurred: " + query.error.message;
+  if (!query.data) return null;
 
   return (
     <WeeklyView
-      weekData={currentWeekDataQuery.data.weekData}
+      weekData={query.data.weekData}
       selectedDay={selectedDay}
       handleDayButtonClick={handleDayButtonClick}
-      formData={formData}
-      setFormData={setFormData}
-      handleSubmit={handleSubmit}
-      completeDayMutation={completeDayMutation}
     />
   );
 }

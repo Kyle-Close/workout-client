@@ -1,10 +1,10 @@
 import { useMutation } from "@tanstack/react-query";
 import { BASE_URL } from "../globals";
-import type { ExerciseLogFormItem } from "../components/WeeklyView";
+import type { ExerciseLogFormEntry } from "./useExerciseLogForm";
 
 export function useUpdateExerciseLogs() {
   return useMutation({
-    mutationFn: async (updateLogsData: ExerciseLogFormItem[]) => {
+    mutationFn: async (updateLogsData: ExerciseLogFormEntry[]) => {
       const response = await fetch(`${BASE_URL}/update-logs`, {
         method: "PATCH",
         headers: {

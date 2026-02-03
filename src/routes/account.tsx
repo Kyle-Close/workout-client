@@ -21,9 +21,9 @@ function RouteComponent() {
           params={{ userId: USER_ID }}
         />
         <AccountLink
-          url="/history/$userId/$workoutProgramId"
+          url="/users/$userId/programs/$programId/history"
           title="Workout History"
-          params={{ userId: USER_ID, workoutProgramId: PROGRAM_ID }}
+          params={{ userId: USER_ID, programId: PROGRAM_ID }}
         />
       </Stack>
     </Box>

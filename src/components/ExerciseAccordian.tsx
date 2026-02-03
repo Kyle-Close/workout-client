@@ -6,15 +6,15 @@ import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Box, Divider, Stack } from "@mui/material";
 import NumberSpinner from "./NumberSpinner";
-import type { ExerciseLogFormItem } from "./WeeklyView";
 import { USER_ID } from "../globals";
 import DoneAllIcon from "@mui/icons-material/DoneAll";
+import type { ExerciseLogFormEntry } from "../hooks/useExerciseLogForm";
 
 interface ExerciseAccordianProps {
   titleFontWeight: string;
   exercise: ExerciseForDayView;
-  formData: ExerciseLogFormItem[];
-  setFormData: React.Dispatch<React.SetStateAction<ExerciseLogFormItem[]>>;
+  formData: ExerciseLogFormEntry[];
+  setFormData: React.Dispatch<React.SetStateAction<ExerciseLogFormEntry[]>>;
 }
 
 export function ExerciseAccordian({
@@ -35,7 +35,7 @@ export function ExerciseAccordian({
       );
 
       if (!entry) {
-        const item: ExerciseLogFormItem = {
+        const item: ExerciseLogFormEntry = {
           id: exercise.exercise_log_id,
           user_id: USER_ID,
           workout_day_exercise_id: exercise.workout_day_exercise_id,

@@ -29,47 +29,42 @@ export function WeeklyView({
   const disableBackBtn = minDay === selectedDay;
   const disableForwardBtn = maxDay === selectedDay;
 
-  const bgCss =
-    "linear-gradient(270deg,rgba(144, 202, 249, 1) 0%, rgba(84, 136, 179, 1) 50%, rgba(36, 60, 77, 1) 100%);";
-
-  const bgCss2 =
-    "linear-gradient(270deg,rgba(206, 147, 216, 1) 0%, rgba(145, 90, 153, 1) 50%, rgba(97, 55, 99, 1) 100%);";
-
   return (
-    <Box padding={3}>
-      <Box className="flex flex-row justify-between items-end pb-4">
+    <Box sx={{ px: { xs: 2, sm: 3 }, py: 3 }}>
+      {/* Header */}
+      <Stack
+        direction="row"
+        alignItems="baseline"
+        justifyContent="space-between"
+        sx={{ mb: 2.5, ml: 1.5 }}
+      >
         <Typography
-          color="primary"
-          variant="h4"
-          sx={{
-            background: bgCss,
-            backgroundClip: "text",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-            color: "transparent",
-          }}
+          fontWeight={700}
+          fontSize={{ xs: "1.5rem", sm: "1.75rem" }}
+          color="text.primary"
+          sx={{ lineHeight: 1 }}
         >
           Week {weekNumber}
         </Typography>
-        <Stack direction="row" spacing={2}>
+
+        <Stack direction="row" alignItems="center" spacing={0.5}>
           <IconButton
             disabled={disableBackBtn}
             onClick={() => handleDayButtonClick(true)}
-            size="small"
+            sx={{
+              width: 36,
+              height: 36,
+              "&:hover": { bgcolor: "rgba(255,255,255,0.08)" },
+            }}
           >
-            <ArrowBackIosIcon />
+            <ArrowBackIosIcon sx={{ fontSize: 14, ml: 0.5 }} />
           </IconButton>
 
           <Typography
-            color="secondary"
-            variant="h6"
-            sx={{
-              background: bgCss2,
-              backgroundClip: "text",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              color: "transparent",
-            }}
+            fontWeight={600}
+            fontSize="0.95rem"
+            color="text.secondary"
+            sx={{ minWidth: 48, textAlign: "center" }}
           >
             Day {selectedDay}
           </Typography>
@@ -77,12 +72,17 @@ export function WeeklyView({
           <IconButton
             disabled={disableForwardBtn}
             onClick={() => handleDayButtonClick(false)}
-            size="small"
+            sx={{
+              width: 36,
+              height: 36,
+              "&:hover": { bgcolor: "rgba(255,255,255,0.08)" },
+            }}
           >
-            <ArrowForwardIosIcon />
+            <ArrowForwardIosIcon sx={{ fontSize: 14 }} />
           </IconButton>
         </Stack>
-      </Box>
+      </Stack>
+
       <DayView
         exerciseLogs={weekData.filter((log) => log.workout_day === selectedDay)}
         readOnly={readOnly}

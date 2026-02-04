@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useGetWeekLogs } from "../../../../../../../hooks/useGetWeekLogs";
 import { WeeklyView } from "../../../../../../../components/WeeklyView";
 import { useDaySelector } from "../../../../../../../hooks/useDaySelector";
+import { Box, CircularProgress, Typography } from "@mui/material";
 
 export const Route = createFileRoute(
   "/users/$userId/programs/$programId/weeks/$weekId/logs",
@@ -15,11 +16,28 @@ function RouteComponent() {
   const weekLogsQuery = useGetWeekLogs(userId, programId, weekId);
 
   if (weekLogsQuery.isError) {
-    return <div>There was an error fetching the weekly log data</div>;
+    return (
+      <Box sx={{ m: 3 }}>
+        <Typography color="error">
+          There was an error fetching the weekly log data
+        </Typography>
+      </Box>
+    );
   }
 
   if (weekLogsQuery.isLoading || !weekLogsQuery.data) {
-    return <div>Loading...</div>;
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "60vh",
+        }}
+      >
+        <CircularProgress size={32} />
+      </Box>
+    );
   }
 
   return (

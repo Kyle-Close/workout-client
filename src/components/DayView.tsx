@@ -5,11 +5,20 @@ import { ExerciseAccordian } from "./ExerciseAccordian";
 
 interface DayViewProps {
   exerciseLogs: ExerciseForDayView[];
+  readOnly: boolean;
 }
 
-export function DayView({ exerciseLogs }: DayViewProps) {
+export function DayView({ exerciseLogs, readOnly }: DayViewProps) {
   const { formData, setFormData, handleSubmit, completeDayMutation } =
     useExerciseLogForm();
+
+  // Filter optional exercises based on readOnly mode
+  const optionalExercises = exerciseLogs.filter(
+    (exercise) => exercise.optional,
+  );
+  const optionalToShow = readOnly
+    ? optionalExercises.filter((exercise) => exercise.completed)
+    : optionalExercises;
 
   return (
     <Stack component="form" onSubmit={handleSubmit}>
@@ -26,14 +35,14 @@ export function DayView({ exerciseLogs }: DayViewProps) {
           );
         }
       })}
-
-      <Divider sx={{ m: 2, "& .MuiDivider-wrapper": { fontStyle: "italic" } }}>
-        Optional
-      </Divider>
-
-      {exerciseLogs.map((exercise, key) => {
-        if (exercise.optional) {
-          return (
+      {optionalToShow.length > 0 && (
+        <>
+          <Divider
+            sx={{ m: 2, "& .MuiDivider-wrapper": { fontStyle: "italic" } }}
+          >
+            Optional
+          </Divider>
+          {optionalToShow.map((exercise, key) => (
             <ExerciseAccordian
               titleFontWeight="lighter"
               exercise={exercise}
@@ -41,28 +50,31 @@ export function DayView({ exerciseLogs }: DayViewProps) {
               formData={formData}
               setFormData={setFormData}
             />
-          );
-        }
-      })}
-
-      <Button
-        disabled={formData.length === 0}
-        sx={{ mt: 2 }}
-        variant="contained"
-        type="submit"
-      >
-        Log Exercises
-      </Button>
-
-      {completeDayMutation.isSuccess && (
-        <Alert severity="success">Successfully updated exercise log(s).</Alert>
+          ))}
+        </>
       )}
-
-      {completeDayMutation.isError && (
-        <Alert severity="error">
-          There was an error updating the logs. At least 1 field must be
-          changed.
-        </Alert>
+      {!readOnly && (
+        <>
+          <Button
+            disabled={formData.length === 0}
+            sx={{ mt: 2 }}
+            variant="contained"
+            type="submit"
+          >
+            Log Exercises
+          </Button>
+          {completeDayMutation.isSuccess && (
+            <Alert severity="success">
+              Successfully updated exercise log(s).
+            </Alert>
+          )}
+          {completeDayMutation.isError && (
+            <Alert severity="error">
+              There was an error updating the logs. At least 1 field must be
+              changed.
+            </Alert>
+          )}
+        </>
       )}
     </Stack>
   );

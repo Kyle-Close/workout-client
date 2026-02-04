@@ -9,12 +9,14 @@ interface WeeklyViewProps {
   weekData: ExerciseForDayView[];
   selectedDay: number;
   handleDayButtonClick: (isGoBack: boolean) => void;
+  readOnly: boolean;
 }
 
 export function WeeklyView({
   weekData,
   selectedDay,
   handleDayButtonClick,
+  readOnly,
 }: WeeklyViewProps) {
   const weekNumber = weekData[0].program_week;
 
@@ -83,6 +85,7 @@ export function WeeklyView({
       </Box>
       <DayView
         exerciseLogs={weekData.filter((log) => log.workout_day === selectedDay)}
+        readOnly={readOnly}
       />
     </Box>
   );

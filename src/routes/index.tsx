@@ -26,6 +26,7 @@ function LandingPage() {
       weekData={query.data.weekData}
       selectedDay={selectedDay}
       handleDayButtonClick={handleDayButtonClick}
+      readOnly={false}
     />
   );
 }

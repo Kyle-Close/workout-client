@@ -27,6 +27,7 @@ function RouteComponent() {
       weekData={weekLogsQuery.data}
       selectedDay={selectedDay}
       handleDayButtonClick={handleDayButtonClick}
+      readOnly={true}
     />
   );
 }

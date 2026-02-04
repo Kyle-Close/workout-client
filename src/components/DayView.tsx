@@ -57,7 +57,14 @@ export function DayView({ exerciseLogs, readOnly }: DayViewProps) {
         <>
           <Button
             disabled={formData.length === 0}
-            sx={{ mt: 2 }}
+            sx={{
+              mt: 3,
+              py: 1.5,
+              borderRadius: "10px",
+              fontWeight: 600,
+              fontSize: "0.95rem",
+              textTransform: "none",
+            }}
             variant="contained"
             type="submit"
           >

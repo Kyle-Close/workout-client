@@ -4,10 +4,11 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { Box, Divider, Stack } from "@mui/material";
+import { Box, Chip, Stack } from "@mui/material";
 import NumberSpinner from "./NumberSpinner";
 import { USER_ID } from "../globals";
 import DoneAllIcon from "@mui/icons-material/DoneAll";
+import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import type { ExerciseLogFormEntry } from "../hooks/useExerciseLogForm";
 
 interface ExerciseAccordianProps {
@@ -67,104 +68,239 @@ export function ExerciseAccordian({
 
   const entry = formData.find((log) => log.id === exercise.exercise_log_id);
 
+  const setsHit =
+    exercise.sets_completed != null &&
+    exercise.sets_completed >= exercise.target_sets;
+
   return (
-    <Accordion>
-      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-        <Stack gap={2} flexDirection={"row"} alignItems={"center"}>
-          {exercise.completed && <DoneAllIcon color="success" />}
-          <Typography
-            fontWeight={titleFontWeight}
-            variant="h6"
-            component="span"
-            color={exercise.completed ? "success" : ""}
-          >
-            {exercise.exercise_name}
-          </Typography>
+    <Accordion
+      disableGutters
+      sx={{
+        borderRadius: "12px !important",
+        mb: 1.5,
+        "&::before": { display: "none" },
+        backgroundImage: "none",
+        bgcolor: exercise.completed
+          ? "rgba(46, 125, 50, 0.08)"
+          : "rgba(255,255,255,0.03)",
+        border: 1,
+        borderColor: exercise.completed
+          ? "rgba(46, 125, 50, 0.3)"
+          : "rgba(255,255,255,0.08)",
+        overflow: "hidden",
+      }}
+    >
+      <AccordionSummary
+        expandIcon={<ExpandMoreIcon />}
+        sx={{
+          px: 2,
+          py: 0.5,
+          minHeight: 56,
+          "& .MuiAccordionSummary-content": { my: 1.5 },
+        }}
+      >
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+          width="100%"
+          mr={1}
+        >
+          <Stack direction="row" gap={1.5} alignItems="center">
+            {exercise.completed ? (
+              <DoneAllIcon color="success" fontSize="small" />
+            ) : (
+              <FitnessCenterIcon
+                sx={{ color: "text.secondary", fontSize: 20 }}
+              />
+            )}
+            <Typography
+              fontWeight={titleFontWeight}
+              fontSize={{ xs: "0.95rem", sm: "1.1rem" }}
+              component="span"
+              color={exercise.completed ? "success.main" : "text.primary"}
+              sx={{ lineHeight: 1.3 }}
+            >
+              {exercise.exercise_name}
+            </Typography>
+          </Stack>
+          <Chip
+            label={`${exercise.weight} lbs`}
+            size="small"
+            variant="outlined"
+            sx={{
+              fontWeight: 600,
+              fontSize: "0.75rem",
+              borderColor: "primary.main",
+              color: "primary.main",
+            }}
+          />
         </Stack>
       </AccordionSummary>
-      <AccordionDetails>
-        <Stack spacing={2} ml={1} mr={1}>
-          <Stack direction="row" justifyContent="space-around">
-            <Stack direction="row" spacing={1}>
-              <Typography fontWeight="medium" color="primary">
-                Weight:
-              </Typography>
-              <Typography>{exercise.weight}</Typography>
-            </Stack>
-            <Stack direction="row" spacing={1}>
-              <Typography fontWeight="medium" color="secondary">
-                Sets:
-              </Typography>
-              <Typography>{exercise.target_sets}</Typography>
-            </Stack>
-            <Stack direction="row" spacing={1}>
-              <Typography fontWeight="medium" color="secondary">
-                Reps:
-              </Typography>
-              <Typography>{exercise.target_reps}</Typography>
-            </Stack>
-          </Stack>
-          <Divider />
-          {!exercise.completed ? (
-            <Stack direction="row" spacing={1} justifyContent="space-between">
-              <Box>
-                <NumberSpinner
-                  onValueChange={(e) => handleSpinnerChange(e, true)}
-                  size="small"
-                  label="Sets Completed"
-                  min={0}
-                  defaultValue={0}
-                  value={
-                    entry
-                      ? entry.sets_completed
-                      : (exercise.sets_completed ?? 0)
-                  }
-                />
-              </Box>
-              <Box>
-                <NumberSpinner
-                  onValueChange={(e) => handleSpinnerChange(e, false)}
-                  size="small"
-                  label="Reps in Reserve"
-                  defaultValue={0}
-                  value={
-                    entry
-                      ? entry.reps_in_reserve
-                      : (exercise.reps_in_reserve ?? 0)
-                  }
-                />
-              </Box>
-            </Stack>
-          ) : (
-            <Stack flexDirection={"row"} justifyContent={"space-around"}>
-              <Stack alignItems={"center"} gap={1}>
-                <Typography fontWeight={"medium"}>Sets Completed</Typography>
-                <Typography
-                  color={
-                    exercise.sets_completed &&
-                    exercise.sets_completed >= exercise.target_sets
-                      ? "success"
-                      : "error"
-                  }
-                >
-                  {exercise.sets_completed}
-                </Typography>
-              </Stack>
-              <Stack alignItems={"center"} gap={1}>
-                <Typography fontWeight={"medium"}>Reps in Reserve</Typography>
-                <Typography
-                  color={
-                    exercise.reps_in_reserve && exercise.reps_in_reserve >= 0
-                      ? "success"
-                      : "error"
-                  }
-                >
-                  {exercise.reps_in_reserve}
-                </Typography>
-              </Stack>
-            </Stack>
-          )}
+
+      <AccordionDetails sx={{ px: 2, pt: 0, pb: 2.5 }}>
+        {/* Target stats */}
+        <Stack
+          direction="row"
+          spacing={1}
+          sx={{
+            mb: 2.5,
+            p: 1.5,
+            borderRadius: "8px",
+            bgcolor: "rgba(255,255,255,0.04)",
+          }}
+        >
+          <Box
+            sx={{
+              flex: 1,
+              textAlign: "center",
+              py: 0.5,
+            }}
+          >
+            <Typography
+              variant="caption"
+              color="text.secondary"
+              sx={{ textTransform: "uppercase", letterSpacing: 0.5 }}
+            >
+              Target Sets
+            </Typography>
+            <Typography fontWeight={600} fontSize="1.1rem">
+              {exercise.target_sets}
+            </Typography>
+          </Box>
+          <Box
+            sx={{
+              width: "1px",
+              bgcolor: "rgba(255,255,255,0.1)",
+              alignSelf: "stretch",
+            }}
+          />
+          <Box
+            sx={{
+              flex: 1,
+              textAlign: "center",
+              py: 0.5,
+            }}
+          >
+            <Typography
+              variant="caption"
+              color="text.secondary"
+              sx={{ textTransform: "uppercase", letterSpacing: 0.5 }}
+            >
+              Target Reps
+            </Typography>
+            <Typography fontWeight={600} fontSize="1.1rem">
+              {exercise.target_reps}
+            </Typography>
+          </Box>
         </Stack>
+
+        {/* Input / completed results */}
+        {!exercise.completed ? (
+          <Stack spacing={2.5}>
+            <Box>
+              <NumberSpinner
+                onValueChange={(e) => handleSpinnerChange(e, true)}
+                size="small"
+                label="Sets Completed"
+                min={0}
+                defaultValue={0}
+                value={
+                  entry
+                    ? entry.sets_completed
+                    : (exercise.sets_completed ?? 0)
+                }
+              />
+            </Box>
+            <Box>
+              <NumberSpinner
+                onValueChange={(e) => handleSpinnerChange(e, false)}
+                size="small"
+                label="Reps in Reserve"
+                defaultValue={0}
+                value={
+                  entry
+                    ? entry.reps_in_reserve
+                    : (exercise.reps_in_reserve ?? 0)
+                }
+              />
+            </Box>
+          </Stack>
+        ) : (
+          <Stack direction="row" spacing={1.5} justifyContent="center">
+            <Box
+              sx={{
+                flex: 1,
+                textAlign: "center",
+                py: 1.5,
+                px: 1,
+                borderRadius: "8px",
+                bgcolor: setsHit
+                  ? "rgba(46, 125, 50, 0.12)"
+                  : "rgba(211, 47, 47, 0.12)",
+                border: 1,
+                borderColor: setsHit
+                  ? "rgba(46, 125, 50, 0.3)"
+                  : "rgba(211, 47, 47, 0.3)",
+              }}
+            >
+              <Typography
+                variant="caption"
+                color="text.secondary"
+                sx={{ textTransform: "uppercase", letterSpacing: 0.5 }}
+              >
+                Sets Completed
+              </Typography>
+              <Typography
+                fontWeight={700}
+                fontSize="1.25rem"
+                color={setsHit ? "success.main" : "error.main"}
+              >
+                {exercise.sets_completed}
+              </Typography>
+            </Box>
+            <Box
+              sx={{
+                flex: 1,
+                textAlign: "center",
+                py: 1.5,
+                px: 1,
+                borderRadius: "8px",
+                bgcolor:
+                  exercise.reps_in_reserve != null &&
+                  exercise.reps_in_reserve >= 0
+                    ? "rgba(46, 125, 50, 0.12)"
+                    : "rgba(211, 47, 47, 0.12)",
+                border: 1,
+                borderColor:
+                  exercise.reps_in_reserve != null &&
+                  exercise.reps_in_reserve >= 0
+                    ? "rgba(46, 125, 50, 0.3)"
+                    : "rgba(211, 47, 47, 0.3)",
+              }}
+            >
+              <Typography
+                variant="caption"
+                color="text.secondary"
+                sx={{ textTransform: "uppercase", letterSpacing: 0.5 }}
+              >
+                Reps in Reserve
+              </Typography>
+              <Typography
+                fontWeight={700}
+                fontSize="1.25rem"
+                color={
+                  exercise.reps_in_reserve != null &&
+                  exercise.reps_in_reserve >= 0
+                    ? "success.main"
+                    : "error.main"
+                }
+              >
+                {exercise.reps_in_reserve}
+              </Typography>
+            </Box>
+          </Stack>
+        )}
       </AccordionDetails>
     </Accordion>
   );

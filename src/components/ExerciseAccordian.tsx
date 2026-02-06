@@ -4,12 +4,13 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { Box, Chip, Stack } from "@mui/material";
+import { Box, Chip, Divider, Stack } from "@mui/material";
 import NumberSpinner from "./NumberSpinner";
 import { USER_ID } from "../globals";
 import DoneAllIcon from "@mui/icons-material/DoneAll";
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import type { ExerciseLogFormEntry } from "../hooks/useExerciseLogForm";
+import { PlateVisualizer } from "./PlateVisualizer";
 
 interface ExerciseAccordianProps {
   titleFontWeight: string;
@@ -197,34 +198,81 @@ export function ExerciseAccordian({
 
         {/* Input / completed results */}
         {!exercise.completed ? (
-          <Stack spacing={2.5}>
-            <Box>
-              <NumberSpinner
-                onValueChange={(e) => handleSpinnerChange(e, true)}
-                size="small"
-                label="Sets Completed"
-                min={0}
-                defaultValue={0}
-                value={
-                  entry
-                    ? entry.sets_completed
-                    : (exercise.sets_completed ?? 0)
-                }
-              />
-            </Box>
-            <Box>
-              <NumberSpinner
-                onValueChange={(e) => handleSpinnerChange(e, false)}
-                size="small"
-                label="Reps in Reserve"
-                defaultValue={0}
-                value={
-                  entry
-                    ? entry.reps_in_reserve
-                    : (exercise.reps_in_reserve ?? 0)
-                }
-              />
-            </Box>
+          <Stack
+            direction={{ xs: "column", sm: "row" }}
+            spacing={2}
+            alignItems="stretch"
+          >
+            {/* Spinners section */}
+            <Stack
+              direction="row"
+              justifyContent="space-around"
+              spacing={2}
+              sx={{ flex: 1, minWidth: 0 }}
+            >
+              <Box>
+                <NumberSpinner
+                  onValueChange={(e) => handleSpinnerChange(e, true)}
+                  size="small"
+                  label="Sets Completed"
+                  min={0}
+                  defaultValue={0}
+                  value={
+                    entry
+                      ? entry.sets_completed
+                      : (exercise.sets_completed ?? 0)
+                  }
+                />
+              </Box>
+              <Box>
+                <NumberSpinner
+                  onValueChange={(e) => handleSpinnerChange(e, false)}
+                  size="small"
+                  label="Reps in Reserve"
+                  defaultValue={0}
+                  value={
+                    entry
+                      ? entry.reps_in_reserve
+                      : (exercise.reps_in_reserve ?? 0)
+                  }
+                />
+              </Box>
+            </Stack>
+
+            {/* Plate visualizer section */}
+            {exercise.plates &&
+              Object.values(exercise.plates).some((count) => count > 0) && (
+                <>
+                  <Divider
+                    orientation="vertical"
+                    flexItem
+                    sx={{
+                      display: { xs: "none", sm: "block" },
+                      borderColor: "rgba(255,255,255,0.08)",
+                    }}
+                  />
+                  <Divider
+                    sx={{
+                      display: { xs: "block", sm: "none" },
+                      borderColor: "rgba(255,255,255,0.08)",
+                    }}
+                  />
+                  <Box
+                    sx={{
+                      flex: 1,
+                      minWidth: 0,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      p: 1,
+                      borderRadius: "8px",
+                      bgcolor: "rgba(255,255,255,0.02)",
+                    }}
+                  >
+                    <PlateVisualizer plates={exercise.plates} />
+                  </Box>
+                </>
+              )}
           </Stack>
         ) : (
           <Stack direction="row" spacing={1.5} justifyContent="center">

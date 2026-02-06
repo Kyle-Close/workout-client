@@ -1,5 +1,14 @@
 import * as z from "zod";
 
+export const PlatesSchema = z.object({
+  plates_45: z.number(),
+  plates_35: z.number(),
+  plates_25: z.number(),
+  plates_10: z.number(),
+  plates_5: z.number(),
+  plates_2_5: z.number(),
+});
+
 export const ExerciseObjectForDayView = z.object({
   exercise_log_id: z.number(),
   workout_day_exercise_id: z.number(),
@@ -13,7 +22,10 @@ export const ExerciseObjectForDayView = z.object({
   reps_in_reserve: z.number().nullable(),
   optional: z.boolean(),
   completed: z.boolean(),
+  plates: PlatesSchema.optional(),
 });
+
+export type Plates = z.infer<typeof PlatesSchema>;
 
 export const CurrentWeekSchema = z.object({
   currentDayOfWeek: z.number(),

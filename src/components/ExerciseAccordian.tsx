@@ -1,18 +1,21 @@
+import { useState } from "react";
 import type { ExerciseForDayView } from "../schemas/currentWeekSchema";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { Box, Chip, Divider, Stack } from "@mui/material";
+import { Box, Button, Chip, Divider, Stack } from "@mui/material";
 import NumberSpinner from "./NumberSpinner";
 import { USER_ID } from "../globals";
 import DoneAllIcon from "@mui/icons-material/DoneAll";
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import TrendingDownIcon from "@mui/icons-material/TrendingDown";
+import ShowChartIcon from "@mui/icons-material/ShowChart";
 import type { ExerciseLogFormEntry } from "../hooks/useExerciseLogForm";
 import { PlateVisualizer } from "./PlateVisualizer";
+import { ExerciseHistoryModal } from "./ExerciseHistoryModal";
 
 interface ExerciseAccordianProps {
   titleFontWeight: string;
@@ -70,6 +73,7 @@ export function ExerciseAccordian({
   };
 
   const entry = formData.find((log) => log.id === exercise.exercise_log_id);
+  const [historyOpen, setHistoryOpen] = useState(false);
 
   const setsHit =
     exercise.sets_completed != null &&
@@ -186,60 +190,94 @@ export function ExerciseAccordian({
       </AccordionSummary>
 
       <AccordionDetails sx={{ px: 2, pt: 0, pb: 2.5 }}>
-        {/* Target stats */}
+        {/* Target stats and history button */}
         <Stack
           direction="row"
-          spacing={1}
-          sx={{
-            mb: 2.5,
-            p: 1.5,
-            borderRadius: "8px",
-            bgcolor: "rgba(255,255,255,0.04)",
-          }}
+          spacing={1.5}
+          alignItems="stretch"
+          sx={{ mb: 2.5 }}
         >
-          <Box
+          <Stack
+            direction="row"
+            spacing={1}
             sx={{
               flex: 1,
-              textAlign: "center",
-              py: 0.5,
+              p: 1.5,
+              borderRadius: "8px",
+              bgcolor: "rgba(255,255,255,0.04)",
             }}
           >
-            <Typography
-              variant="caption"
-              color="text.secondary"
-              sx={{ textTransform: "uppercase", letterSpacing: 0.5 }}
+            <Box
+              sx={{
+                flex: 1,
+                textAlign: "center",
+                py: 0.5,
+              }}
             >
-              Target Sets
-            </Typography>
-            <Typography fontWeight={600} fontSize="1.1rem">
-              {exercise.target_sets}
-            </Typography>
-          </Box>
-          <Box
+              <Typography
+                variant="caption"
+                color="text.secondary"
+                sx={{ textTransform: "uppercase", letterSpacing: 0.5 }}
+              >
+                Target Sets
+              </Typography>
+              <Typography fontWeight={600} fontSize="1.1rem">
+                {exercise.target_sets}
+              </Typography>
+            </Box>
+            <Box
+              sx={{
+                width: "1px",
+                bgcolor: "rgba(255,255,255,0.1)",
+                alignSelf: "stretch",
+              }}
+            />
+            <Box
+              sx={{
+                flex: 1,
+                textAlign: "center",
+                py: 0.5,
+              }}
+            >
+              <Typography
+                variant="caption"
+                color="text.secondary"
+                sx={{ textTransform: "uppercase", letterSpacing: 0.5 }}
+              >
+                Target Reps
+              </Typography>
+              <Typography fontWeight={600} fontSize="1.1rem">
+                {exercise.target_reps}
+              </Typography>
+            </Box>
+          </Stack>
+          <Button
+            variant="outlined"
+            onClick={() => setHistoryOpen(true)}
             sx={{
-              width: "1px",
-              bgcolor: "rgba(255,255,255,0.1)",
-              alignSelf: "stretch",
-            }}
-          />
-          <Box
-            sx={{
-              flex: 1,
-              textAlign: "center",
-              py: 0.5,
+              minWidth: 0,
+              px: 1.5,
+              borderRadius: "8px",
+              borderColor: "rgba(255,255,255,0.12)",
+              color: "text.secondary",
+              display: "flex",
+              flexDirection: "column",
+              gap: 0.25,
+              "&:hover": {
+                borderColor: "primary.main",
+                color: "primary.main",
+                bgcolor: "rgba(144, 202, 249, 0.08)",
+              },
             }}
           >
+            <ShowChartIcon sx={{ fontSize: 20 }} />
             <Typography
               variant="caption"
-              color="text.secondary"
-              sx={{ textTransform: "uppercase", letterSpacing: 0.5 }}
+              sx={{ fontSize: "0.6rem", textTransform: "none" }}
             >
-              Target Reps
+              History
             </Typography>
-            <Typography fontWeight={600} fontSize="1.1rem">
-              {exercise.target_reps}
-            </Typography>
-          </Box>
+          </Button>
         </Stack>
 
         {/* Input / completed results */}
@@ -395,6 +433,14 @@ export function ExerciseAccordian({
             </Box>
           </Stack>
         )}
+
+        {/* History Modal */}
+        <ExerciseHistoryModal
+          open={historyOpen}
+          onClose={() => setHistoryOpen(false)}
+          exerciseId={exercise.exercise_id}
+          exerciseName={exercise.exercise_name}
+        />
       </AccordionDetails>
     </Accordion>
   );

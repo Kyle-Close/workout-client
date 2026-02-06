@@ -11,6 +11,7 @@ export const PlatesSchema = z.object({
 
 export const ExerciseObjectForDayView = z.object({
   exercise_log_id: z.number(),
+  exercise_id: z.number(),
   workout_day_exercise_id: z.number(),
   exercise_name: z.string(),
   program_week: z.number(),

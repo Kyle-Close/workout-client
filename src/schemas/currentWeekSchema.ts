@@ -16,6 +16,7 @@ export const ExerciseObjectForDayView = z.object({
   program_week: z.number(),
   workout_day: z.number(),
   weight: z.number(),
+  weight_change: z.number().nullable().optional(),
   target_sets: z.number(),
   target_reps: z.number(),
   sets_completed: z.number().nullable(),

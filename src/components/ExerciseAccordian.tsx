@@ -9,6 +9,8 @@ import NumberSpinner from "./NumberSpinner";
 import { USER_ID } from "../globals";
 import DoneAllIcon from "@mui/icons-material/DoneAll";
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
+import TrendingUpIcon from "@mui/icons-material/TrendingUp";
+import TrendingDownIcon from "@mui/icons-material/TrendingDown";
 import type { ExerciseLogFormEntry } from "../hooks/useExerciseLogForm";
 import { PlateVisualizer } from "./PlateVisualizer";
 
@@ -125,17 +127,61 @@ export function ExerciseAccordian({
               {exercise.exercise_name}
             </Typography>
           </Stack>
-          <Chip
-            label={`${exercise.weight} lbs`}
-            size="small"
-            variant="outlined"
-            sx={{
-              fontWeight: 600,
-              fontSize: "0.75rem",
-              borderColor: "primary.main",
-              color: "primary.main",
-            }}
-          />
+          <Stack direction="row" alignItems="center" spacing={0.75}>
+            {exercise.weight_change != null && exercise.weight_change !== 0 && (
+              <Stack
+                direction="row"
+                alignItems="center"
+                spacing={0.25}
+                sx={{
+                  px: 0.75,
+                  py: 0.25,
+                  borderRadius: "6px",
+                  bgcolor:
+                    exercise.weight_change > 0
+                      ? "rgba(46, 125, 50, 0.15)"
+                      : "rgba(211, 47, 47, 0.15)",
+                }}
+              >
+                {exercise.weight_change > 0 ? (
+                  <TrendingUpIcon
+                    sx={{
+                      fontSize: 14,
+                      color: "success.main",
+                    }}
+                  />
+                ) : (
+                  <TrendingDownIcon
+                    sx={{
+                      fontSize: 14,
+                      color: "error.main",
+                    }}
+                  />
+                )}
+                <Typography
+                  sx={{
+                    fontSize: "0.7rem",
+                    fontWeight: 600,
+                    color:
+                      exercise.weight_change > 0 ? "success.main" : "error.main",
+                  }}
+                >
+                  {Math.abs(exercise.weight_change)}
+                </Typography>
+              </Stack>
+            )}
+            <Chip
+              label={`${exercise.weight} lbs`}
+              size="small"
+              variant="outlined"
+              sx={{
+                fontWeight: 600,
+                fontSize: "0.75rem",
+                borderColor: "primary.main",
+                color: "primary.main",
+              }}
+            />
+          </Stack>
         </Stack>
       </AccordionSummary>
 
@@ -206,9 +252,9 @@ export function ExerciseAccordian({
             {/* Spinners section */}
             <Stack
               direction="row"
-              justifyContent="space-around"
-              spacing={2}
+              spacing={4}
               sx={{ flex: 1, minWidth: 0 }}
+              alignSelf="center"
             >
               <Box>
                 <NumberSpinner

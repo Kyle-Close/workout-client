@@ -45,10 +45,11 @@ function RouteComponent() {
       {/* Navigation links */}
       <Stack gap={1.5}>
         <AccountLink
-          url="/program"
+          url="/users/$userId/program"
           title="Program"
           description="View your training program"
           icon={<FitnessCenterIcon fontSize="small" />}
+          params={{ userId: USER_ID }}
         />
         <AccountLink
           url="/users/$userId/one-rep-maxes"

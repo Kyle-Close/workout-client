@@ -9,13 +9,19 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { useGetPrograms, useGetProgramDetail } from "../../../hooks/usePrograms";
+import {
+  useGetPrograms,
+  useGetProgramDetail,
+} from "../../../hooks/usePrograms";
 import { useState } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import type { ProgramDay, ProgramExercise } from "../../../schemas/programSchema";
+import type {
+  ProgramDay,
+  ProgramExercise,
+} from "../../../schemas/programSchema";
 
 export const Route = createFileRoute("/users/$userId/program")({
   component: RouteComponent,
@@ -85,18 +91,12 @@ function ExerciseRow({ exercise }: { exercise: ProgramExercise }) {
             />
           )}
         </Stack>
-        <Stack direction="row" gap={2} mt={0.25}>
+        <Stack direction="row" justifyContent="space-between" gap={2} mt={0.25}>
           <Typography variant="caption" color="text.secondary">
             {exercise.target_sets} x {exercise.target_reps}
           </Typography>
           <Typography variant="caption" color="text.secondary">
             {exercise.intensity}%
-          </Typography>
-          <Typography
-            variant="caption"
-            sx={{ color: equipmentColor, fontWeight: 500 }}
-          >
-            {exercise.equipment_type}
           </Typography>
         </Stack>
       </Box>
@@ -199,7 +199,13 @@ function DayAccordion({ day }: { day: ProgramDay }) {
   );
 }
 
-function ProgramDetail({ programId, onBack }: { programId: number; onBack: () => void }) {
+function ProgramDetail({
+  programId,
+  onBack,
+}: {
+  programId: number;
+  onBack: () => void;
+}) {
   const { data, isLoading, isError, error } = useGetProgramDetail(programId);
 
   if (isError) {
@@ -407,7 +413,7 @@ function ProgramsList({
 function RouteComponent() {
   const { userId } = Route.useParams();
   const [selectedProgramId, setSelectedProgramId] = useState<number | null>(
-    null
+    null,
   );
 
   return (

@@ -1,7 +1,8 @@
 import { Avatar, Box, Stack, Typography } from "@mui/material";
 import { createFileRoute } from "@tanstack/react-router";
 import { AccountLink } from "../../../components/AccountLink";
-import { PROGRAM_ID, USER_ID } from "../../../globals";
+import { USER_ID } from "../../../globals";
+import { useActiveProgramId } from "../../../hooks/usePrograms";
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import HistoryIcon from "@mui/icons-material/History";
@@ -12,6 +13,8 @@ export const Route = createFileRoute("/users/$userId/account")({
 });
 
 function RouteComponent() {
+  const activeProgramId = useActiveProgramId(USER_ID);
+
   return (
     <Box sx={{ px: { xs: 2, sm: 3 }, py: 3 }}>
       {/* Profile header */}
@@ -58,13 +61,15 @@ function RouteComponent() {
           icon={<EmojiEventsIcon fontSize="small" />}
           params={{ userId: USER_ID }}
         />
-        <AccountLink
-          url="/users/$userId/programs/$programId/history"
-          title="Workout History"
-          description="Review past workouts"
-          icon={<HistoryIcon fontSize="small" />}
-          params={{ userId: USER_ID, programId: PROGRAM_ID }}
-        />
+        {activeProgramId !== null && (
+          <AccountLink
+            url="/users/$userId/programs/$programId/history"
+            title="Workout History"
+            description="Review past workouts"
+            icon={<HistoryIcon fontSize="small" />}
+            params={{ userId: USER_ID, programId: activeProgramId }}
+          />
+        )}
       </Stack>
     </Box>
   );

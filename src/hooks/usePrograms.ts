@@ -5,6 +5,11 @@ import {
   ProgramDetailSchema,
 } from "../schemas/programSchema";
 
+export function useActiveProgramId(userId: number) {
+  const { data } = useGetPrograms(userId);
+  return data?.[0]?.id ?? null;
+}
+
 export function useGetPrograms(userId: number) {
   return useQuery({
     queryKey: ["programs", userId],

@@ -2,8 +2,10 @@ import { createFileRoute } from "@tanstack/react-router";
 import { WeeklyView } from "../components/WeeklyView";
 import { useDaySelector } from "../hooks/useDaySelector";
 import { useGetActiveWeekLogs } from "../hooks/useGetActiveWeekLogs";
+import { useActiveProgramId } from "../hooks/usePrograms";
 import { useEffect } from "react";
 import { Box, CircularProgress, Typography } from "@mui/material";
+import { USER_ID } from "../globals";
 
 export const Route = createFileRoute("/")({
   component: LandingPage,
@@ -12,13 +14,14 @@ export const Route = createFileRoute("/")({
 function LandingPage() {
   const { selectedDay, setSelectedDay, handleDayButtonClick } =
     useDaySelector();
-  const query = useGetActiveWeekLogs();
+  const activeProgramId = useActiveProgramId(USER_ID);
+  const query = useGetActiveWeekLogs(activeProgramId);
 
   useEffect(() => {
     if (query.data) setSelectedDay(query.data.currentDayOfWeek);
   }, [query.data?.currentDayOfWeek, setSelectedDay]);
 
-  if (query.isPending)
+  if (activeProgramId === null || query.isPending)
     return (
       <Box
         sx={{

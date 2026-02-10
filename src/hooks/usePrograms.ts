@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { BASE_URL } from "../globals";
 import {
   ProgramsListSchema,
@@ -25,6 +25,22 @@ export function useGetProgramDetail(programId: number) {
       if (!res.ok) throw new Error("Failed to fetch program details!");
       const json = await res.json();
       return ProgramDetailSchema.parse(json);
+    },
+  });
+}
+
+export function useDeleteProgram() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (data: { programId: number; userId: number }) => {
+      const response = await fetch(
+        `${BASE_URL}/programs/${data.programId}?user_id=${data.userId}`,
+        { method: "DELETE" },
+      );
+      if (!response.ok) throw new Error("Failed to delete program");
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["programs"] });
     },
   });
 }

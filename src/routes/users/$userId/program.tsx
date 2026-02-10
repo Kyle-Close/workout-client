@@ -7,12 +7,18 @@ import {
   Button,
   Chip,
   CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   Stack,
   Typography,
 } from "@mui/material";
 import {
   useGetPrograms,
   useGetProgramDetail,
+  useDeleteProgram,
 } from "../../../hooks/usePrograms";
 import { useState } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -20,6 +26,7 @@ import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import AddIcon from "@mui/icons-material/Add";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import type {
   ProgramDay,
   ProgramExercise,
@@ -203,12 +210,29 @@ function DayAccordion({ day }: { day: ProgramDay }) {
 
 function ProgramDetail({
   programId,
+  userId,
   onBack,
 }: {
   programId: number;
+  userId: string;
   onBack: () => void;
 }) {
   const { data, isLoading, isError, error } = useGetProgramDetail(programId);
+  const deleteProgram = useDeleteProgram();
+  const [confirmOpen, setConfirmOpen] = useState(false);
+
+  const handleDelete = async () => {
+    try {
+      await deleteProgram.mutateAsync({
+        programId,
+        userId: Number(userId),
+      });
+      setConfirmOpen(false);
+      onBack();
+    } catch {
+      // error is available via deleteProgram.error
+    }
+  };
 
   if (isError) {
     return (
@@ -249,10 +273,26 @@ function ProgramDetail({
         </Typography>
       </Stack>
 
-      {/* Program name */}
-      <Typography fontWeight={600} fontSize="1.25rem" sx={{ mb: 0.5 }}>
-        {data.name}
-      </Typography>
+      {/* Program name + delete */}
+      <Stack
+        direction="row"
+        alignItems="center"
+        justifyContent="space-between"
+        sx={{ mb: 0.5 }}
+      >
+        <Typography fontWeight={600} fontSize="1.25rem">
+          {data.name}
+        </Typography>
+        <Button
+          size="small"
+          color="error"
+          startIcon={<DeleteOutlineIcon />}
+          onClick={() => setConfirmOpen(true)}
+          sx={{ textTransform: "none" }}
+        >
+          Delete
+        </Button>
+      </Stack>
       <Typography color="text.secondary" fontSize="0.85rem" sx={{ mb: 3 }}>
         {data.days.length} day program
       </Typography>
@@ -290,6 +330,30 @@ function ProgramDetail({
       {data.days.map((day) => (
         <DayAccordion key={day.day} day={day} />
       ))}
+
+      {/* Delete confirmation dialog */}
+      <Dialog open={confirmOpen} onClose={() => setConfirmOpen(false)}>
+        <DialogTitle>Delete Program</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to delete "{data.name}"? This will permanently
+            remove the program and all associated workout data. This action
+            cannot be undone.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setConfirmOpen(false)} disabled={deleteProgram.isPending}>
+            Cancel
+          </Button>
+          <Button
+            onClick={handleDelete}
+            color="error"
+            disabled={deleteProgram.isPending}
+          >
+            {deleteProgram.isPending ? "Deleting..." : "Delete"}
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }
@@ -339,9 +403,21 @@ function ProgramsList({
         <FitnessCenterIcon
           sx={{ fontSize: 48, color: "text.disabled", mb: 2 }}
         />
-        <Typography color="text.secondary">
+        <Typography color="text.secondary" sx={{ mb: 3 }}>
           No programs found for this account.
         </Typography>
+        <Button
+          startIcon={<AddIcon />}
+          variant="contained"
+          onClick={() =>
+            navigate({
+              to: "/users/$userId/create-program",
+              params: { userId },
+            })
+          }
+        >
+          Create Program
+        </Button>
       </Box>
     );
   }
@@ -444,6 +520,7 @@ function RouteComponent() {
       {selectedProgramId ? (
         <ProgramDetail
           programId={selectedProgramId}
+          userId={userId}
           onBack={() => setSelectedProgramId(null)}
         />
       ) : (

@@ -1,9 +1,10 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
   Box,
+  Button,
   Chip,
   CircularProgress,
   Stack,
@@ -18,6 +19,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import AddIcon from "@mui/icons-material/Add";
 import type {
   ProgramDay,
   ProgramExercise,
@@ -299,6 +301,7 @@ function ProgramsList({
   userId: string;
   onSelect: (id: number) => void;
 }) {
+  const navigate = useNavigate();
   const { data, isLoading, isError, error } = useGetPrograms(Number(userId));
 
   if (isError) {
@@ -406,6 +409,26 @@ function ProgramsList({
           </Box>
         ))}
       </Stack>
+      <Button
+        fullWidth
+        startIcon={<AddIcon />}
+        onClick={() =>
+          navigate({
+            to: "/users/$userId/create-program",
+            params: { userId },
+          })
+        }
+        sx={{
+          mt: 2,
+          border: "1px dashed rgba(255,255,255,0.2)",
+          borderRadius: "12px",
+          color: "text.secondary",
+          textTransform: "none",
+          py: 1.5,
+        }}
+      >
+        Create Program
+      </Button>
     </Box>
   );
 }

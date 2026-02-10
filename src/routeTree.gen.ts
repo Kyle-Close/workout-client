@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as UsersUserIdProgramRouteImport } from './routes/users/$userId/program'
 import { Route as UsersUserIdOneRepMaxesRouteImport } from './routes/users/$userId/one-rep-maxes'
+import { Route as UsersUserIdCreateProgramRouteImport } from './routes/users/$userId/create-program'
 import { Route as UsersUserIdAccountRouteImport } from './routes/users/$userId/account'
 import { Route as UsersUserIdProgramsProgramIdHistoryRouteImport } from './routes/users/$userId/programs/$programId/history'
 import { Route as UsersUserIdProgramsProgramIdWeeksWeekIdLogsRouteImport } from './routes/users/$userId/programs/$programId/weeks/$weekId/logs'
@@ -31,6 +32,12 @@ const UsersUserIdOneRepMaxesRoute = UsersUserIdOneRepMaxesRouteImport.update({
   path: '/users/$userId/one-rep-maxes',
   getParentRoute: () => rootRouteImport,
 } as any)
+const UsersUserIdCreateProgramRoute =
+  UsersUserIdCreateProgramRouteImport.update({
+    id: '/users/$userId/create-program',
+    path: '/users/$userId/create-program',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const UsersUserIdAccountRoute = UsersUserIdAccountRouteImport.update({
   id: '/users/$userId/account',
   path: '/users/$userId/account',
@@ -52,6 +59,7 @@ const UsersUserIdProgramsProgramIdWeeksWeekIdLogsRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/users/$userId/account': typeof UsersUserIdAccountRoute
+  '/users/$userId/create-program': typeof UsersUserIdCreateProgramRoute
   '/users/$userId/one-rep-maxes': typeof UsersUserIdOneRepMaxesRoute
   '/users/$userId/program': typeof UsersUserIdProgramRoute
   '/users/$userId/programs/$programId/history': typeof UsersUserIdProgramsProgramIdHistoryRoute
@@ -60,6 +68,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/users/$userId/account': typeof UsersUserIdAccountRoute
+  '/users/$userId/create-program': typeof UsersUserIdCreateProgramRoute
   '/users/$userId/one-rep-maxes': typeof UsersUserIdOneRepMaxesRoute
   '/users/$userId/program': typeof UsersUserIdProgramRoute
   '/users/$userId/programs/$programId/history': typeof UsersUserIdProgramsProgramIdHistoryRoute
@@ -69,6 +78,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/users/$userId/account': typeof UsersUserIdAccountRoute
+  '/users/$userId/create-program': typeof UsersUserIdCreateProgramRoute
   '/users/$userId/one-rep-maxes': typeof UsersUserIdOneRepMaxesRoute
   '/users/$userId/program': typeof UsersUserIdProgramRoute
   '/users/$userId/programs/$programId/history': typeof UsersUserIdProgramsProgramIdHistoryRoute
@@ -79,6 +89,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/users/$userId/account'
+    | '/users/$userId/create-program'
     | '/users/$userId/one-rep-maxes'
     | '/users/$userId/program'
     | '/users/$userId/programs/$programId/history'
@@ -87,6 +98,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/users/$userId/account'
+    | '/users/$userId/create-program'
     | '/users/$userId/one-rep-maxes'
     | '/users/$userId/program'
     | '/users/$userId/programs/$programId/history'
@@ -95,6 +107,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/users/$userId/account'
+    | '/users/$userId/create-program'
     | '/users/$userId/one-rep-maxes'
     | '/users/$userId/program'
     | '/users/$userId/programs/$programId/history'
@@ -104,6 +117,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   UsersUserIdAccountRoute: typeof UsersUserIdAccountRoute
+  UsersUserIdCreateProgramRoute: typeof UsersUserIdCreateProgramRoute
   UsersUserIdOneRepMaxesRoute: typeof UsersUserIdOneRepMaxesRoute
   UsersUserIdProgramRoute: typeof UsersUserIdProgramRoute
   UsersUserIdProgramsProgramIdHistoryRoute: typeof UsersUserIdProgramsProgramIdHistoryRoute
@@ -133,6 +147,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof UsersUserIdOneRepMaxesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/users/$userId/create-program': {
+      id: '/users/$userId/create-program'
+      path: '/users/$userId/create-program'
+      fullPath: '/users/$userId/create-program'
+      preLoaderRoute: typeof UsersUserIdCreateProgramRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/users/$userId/account': {
       id: '/users/$userId/account'
       path: '/users/$userId/account'
@@ -160,6 +181,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   UsersUserIdAccountRoute: UsersUserIdAccountRoute,
+  UsersUserIdCreateProgramRoute: UsersUserIdCreateProgramRoute,
   UsersUserIdOneRepMaxesRoute: UsersUserIdOneRepMaxesRoute,
   UsersUserIdProgramRoute: UsersUserIdProgramRoute,
   UsersUserIdProgramsProgramIdHistoryRoute:

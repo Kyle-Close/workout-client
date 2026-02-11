@@ -1,13 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
-import { BASE_URL } from "../globals";
+import { apiFetch } from "../auth";
 import { ExerciseHistorySchema } from "../schemas/exerciseHistorySchema";
 
-export function useExerciseHistory(userId: number, exerciseId: number | null) {
+export function useExerciseHistory(exerciseId: number | null) {
   return useQuery({
-    queryKey: ["exerciseHistory", userId, exerciseId],
+    queryKey: ["exerciseHistory", exerciseId],
     queryFn: async () => {
-      const res = await fetch(
-        `${BASE_URL}/exercises/history?user_id=${userId}&exercise_id=${exerciseId}`
+      const res = await apiFetch(
+        `/exercises/history?exercise_id=${exerciseId}`,
       );
       if (!res.ok) throw new Error("Failed to fetch exercise history!");
       const json = await res.json();

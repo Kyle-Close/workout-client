@@ -1,20 +1,21 @@
 import { Avatar, Box, Stack, Typography } from "@mui/material";
 import { createFileRoute } from "@tanstack/react-router";
-import { AccountLink } from "../../../components/AccountLink";
-import { USER_ID } from "../../../globals";
-import { useActiveProgramId } from "../../../hooks/usePrograms";
+import { AccountLink } from "../components/AccountLink";
+import { useActiveProgramId } from "../hooks/usePrograms";
+import { useAuth } from "../auth";
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import HistoryIcon from "@mui/icons-material/History";
 import MonitorWeightIcon from "@mui/icons-material/MonitorWeight";
 import PersonIcon from "@mui/icons-material/Person";
 
-export const Route = createFileRoute("/users/$userId/account")({
+export const Route = createFileRoute("/account")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
-  const activeProgramId = useActiveProgramId(USER_ID);
+  const activeProgramId = useActiveProgramId();
+  const { user } = useAuth();
 
   return (
     <Box sx={{ px: { xs: 2, sm: 3 }, py: 3 }}>
@@ -42,40 +43,37 @@ function RouteComponent() {
           <PersonIcon sx={{ fontSize: 32 }} />
         </Avatar>
         <Typography fontWeight={600} fontSize="1.2rem">
-          Kyle Close
+          {user?.username ?? "User"}
         </Typography>
       </Stack>
 
       {/* Navigation links */}
       <Stack gap={1.5}>
         <AccountLink
-          url="/users/$userId/program"
+          url="/program"
           title="Program"
           description="View your training program"
           icon={<FitnessCenterIcon fontSize="small" />}
-          params={{ userId: USER_ID }}
         />
         <AccountLink
-          url="/users/$userId/one-rep-maxes"
+          url="/one-rep-maxes"
           title="One Rep Maxes"
           description="Track your strength progress"
           icon={<EmojiEventsIcon fontSize="small" />}
-          params={{ userId: USER_ID }}
         />
         <AccountLink
-          url="/users/$userId/weight"
+          url="/weight"
           title="Body Weight"
           description="Track your body weight"
           icon={<MonitorWeightIcon fontSize="small" />}
-          params={{ userId: USER_ID }}
         />
         {activeProgramId !== null && (
           <AccountLink
-            url="/users/$userId/programs/$programId/history"
+            url="/programs/$programId/history"
             title="Workout History"
             description="Review past workouts"
             icon={<HistoryIcon fontSize="small" />}
-            params={{ userId: USER_ID, programId: activeProgramId }}
+            params={{ programId: activeProgramId }}
           />
         )}
       </Stack>

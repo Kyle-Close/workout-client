@@ -1,20 +1,20 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { BASE_URL } from "../globals";
+import { apiFetch } from "../auth";
 import {
   ProgramsListSchema,
   ProgramDetailSchema,
 } from "../schemas/programSchema";
 
-export function useActiveProgramId(userId: number) {
-  const { data } = useGetPrograms(userId);
+export function useActiveProgramId() {
+  const { data } = useGetPrograms();
   return data?.[0]?.id ?? null;
 }
 
-export function useGetPrograms(userId: number) {
+export function useGetPrograms() {
   return useQuery({
-    queryKey: ["programs", userId],
+    queryKey: ["programs"],
     queryFn: async () => {
-      const res = await fetch(`${BASE_URL}/programs?user_id=${userId}`);
+      const res = await apiFetch("/programs");
       if (!res.ok) throw new Error("Failed to fetch programs!");
       const json = await res.json();
       return ProgramsListSchema.parse(json);
@@ -26,7 +26,7 @@ export function useGetProgramDetail(programId: number) {
   return useQuery({
     queryKey: ["program", programId],
     queryFn: async () => {
-      const res = await fetch(`${BASE_URL}/programs/${programId}`);
+      const res = await apiFetch(`/programs/${programId}`);
       if (!res.ok) throw new Error("Failed to fetch program details!");
       const json = await res.json();
       return ProgramDetailSchema.parse(json);
@@ -38,7 +38,7 @@ export function useUpdateProgramName(programId: number) {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (name: string) => {
-      const response = await fetch(`${BASE_URL}/programs/${programId}`, {
+      const response = await apiFetch(`/programs/${programId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name }),
@@ -64,8 +64,8 @@ export function useUpdateProgramExercises(programId: number) {
         intensity: number;
       }[],
     ) => {
-      const response = await fetch(
-        `${BASE_URL}/programs/${programId}/exercises`,
+      const response = await apiFetch(
+        `/programs/${programId}/exercises`,
         {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
@@ -85,11 +85,10 @@ export function useUpdateProgramExercises(programId: number) {
 export function useDeleteProgram() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (data: { programId: number; userId: number }) => {
-      const response = await fetch(
-        `${BASE_URL}/programs/${data.programId}?user_id=${data.userId}`,
-        { method: "DELETE" },
-      );
+    mutationFn: async (programId: number) => {
+      const response = await apiFetch(`/programs/${programId}`, {
+        method: "DELETE",
+      });
       if (!response.ok) throw new Error("Failed to delete program");
     },
     onSuccess: () => {

@@ -1,15 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
-import OneRepMaxTable from "../../../components/OneRepMaxTable";
+import OneRepMaxTable from "../components/OneRepMaxTable";
 import { Box, CircularProgress, Typography } from "@mui/material";
-import { useOneRepMax } from "../../../hooks/useOneRepMax";
+import { useOneRepMax } from "../hooks/useOneRepMax";
 
-export const Route = createFileRoute("/users/$userId/one-rep-maxes")({
+export const Route = createFileRoute("/one-rep-maxes")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
-  const { userId } = Route.useParams();
-  const { oneRepMaxQuery } = useOneRepMax(userId);
+  const { oneRepMaxQuery } = useOneRepMax();
 
   if (oneRepMaxQuery.isError) {
     return (

@@ -5,6 +5,7 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { createRouter, RouterProvider } from "@tanstack/react-router";
 import { routeTree } from "./routeTree.gen.ts";
+import { AuthProvider } from "./auth";
 
 import "./index.css";
 import "@fontsource/roboto/300.css";
@@ -39,7 +40,9 @@ createRoot(document.getElementById("root")!).render(
     <QueryClientProvider client={queryClient}>
       <ThemeProvider theme={darkTheme}>
         <CssBaseline />
-        <RouterProvider router={router} />
+        <AuthProvider>
+          <RouterProvider router={router} />
+        </AuthProvider>
       </ThemeProvider>
     </QueryClientProvider>
   </StrictMode>,

@@ -3,7 +3,6 @@ import { useUpdateExerciseLogs } from "./useUpdateExerciseLogs";
 
 export type ExerciseLogFormEntry = {
   id: number;
-  user_id: number;
   workout_day_exercise_id: number;
   program_week: number;
   weight: number;

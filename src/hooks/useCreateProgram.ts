@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { BASE_URL } from "../globals";
+import { apiFetch } from "../auth";
 import { ProgramDetailSchema } from "../schemas/programSchema";
 
 export function useCreateProgram() {
@@ -7,7 +7,6 @@ export function useCreateProgram() {
   return useMutation({
     mutationFn: async (data: {
       name: string;
-      user_id: number;
       exercises: {
         exercise_id: number;
         workout_day: number;
@@ -17,7 +16,7 @@ export function useCreateProgram() {
         optional: boolean;
       }[];
     }) => {
-      const response = await fetch(`${BASE_URL}/programs`, {
+      const response = await apiFetch("/programs", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

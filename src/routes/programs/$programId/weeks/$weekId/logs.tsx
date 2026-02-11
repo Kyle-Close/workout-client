@@ -1,19 +1,19 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useGetWeekLogs } from "../../../../../../../hooks/useGetWeekLogs";
-import { WeeklyView } from "../../../../../../../components/WeeklyView";
-import { useDaySelector } from "../../../../../../../hooks/useDaySelector";
+import { useGetWeekLogs } from "../../../../../hooks/useGetWeekLogs";
+import { WeeklyView } from "../../../../../components/WeeklyView";
+import { useDaySelector } from "../../../../../hooks/useDaySelector";
 import { Box, CircularProgress, Typography } from "@mui/material";
 
 export const Route = createFileRoute(
-  "/users/$userId/programs/$programId/weeks/$weekId/logs",
+  "/programs/$programId/weeks/$weekId/logs",
 )({
   component: RouteComponent,
 });
 
 function RouteComponent() {
-  const { userId, programId, weekId } = Route.useParams();
+  const { programId, weekId } = Route.useParams();
   const { selectedDay, handleDayButtonClick } = useDaySelector();
-  const weekLogsQuery = useGetWeekLogs(userId, programId, weekId);
+  const weekLogsQuery = useGetWeekLogs(Number(programId), Number(weekId));
 
   if (weekLogsQuery.isError) {
     return (

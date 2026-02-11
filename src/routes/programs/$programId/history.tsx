@@ -6,19 +6,19 @@ import {
   Button,
   CircularProgress,
 } from "@mui/material";
-import { useGetActiveWeekNumber } from "../../../../../hooks/useGetActiveWeekNumber";
+import { useGetActiveWeekNumber } from "../../../hooks/useGetActiveWeekNumber";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import HistoryIcon from "@mui/icons-material/History";
 
 export const Route = createFileRoute(
-  "/users/$userId/programs/$programId/history",
+  "/programs/$programId/history",
 )({
   component: RouteComponent,
 });
 
 function RouteComponent() {
-  const { userId, programId } = Route.useParams();
-  const { getActiveWeekQuery } = useGetActiveWeekNumber(userId, programId);
+  const { programId } = Route.useParams();
+  const { getActiveWeekQuery } = useGetActiveWeekNumber(Number(programId));
 
   if (getActiveWeekQuery.isError) {
     return (
@@ -103,7 +103,7 @@ interface WeekSquareProps {
 }
 
 function WeekSquare({ weekNumber, isCompleted, isCurrent }: WeekSquareProps) {
-  const { userId, programId } = Route.useParams();
+  const { programId } = Route.useParams();
   const navigate = useNavigate();
 
   const handleBtnClick = (isCurrent: boolean, weekNum: number) => {
@@ -111,7 +111,7 @@ function WeekSquare({ weekNumber, isCompleted, isCurrent }: WeekSquareProps) {
       navigate({ to: "/" });
     } else {
       navigate({
-        to: `/users/${userId}/programs/${programId}/weeks/${weekNum}/logs`,
+        to: `/programs/${programId}/weeks/${weekNum}/logs`,
       });
     }
   };

@@ -8,7 +8,6 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Box, Button, Chip, IconButton, Stack } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
-import { USER_ID } from "../globals";
 import DoneAllIcon from "@mui/icons-material/DoneAll";
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
@@ -45,7 +44,6 @@ export function ExerciseAccordian({
       if (!entry) {
         const item: ExerciseLogFormEntry = {
           id: exercise.exercise_log_id,
-          user_id: USER_ID,
           workout_day_exercise_id: exercise.workout_day_exercise_id,
           program_week: exercise.program_week,
           weight: exercise.weight,

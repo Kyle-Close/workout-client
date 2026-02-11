@@ -1,12 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
-import { BASE_URL } from "../globals";
+import { apiFetch } from "../auth";
 import { OneRepMaxSchema } from "../schemas/oneRepMaxesSchema";
 
-export function useOneRepMax(userId: string) {
+export function useOneRepMax() {
   const oneRepMaxQuery = useQuery({
-    queryKey: ["oneRepMax", userId],
+    queryKey: ["oneRepMax"],
     queryFn: async () => {
-      const res = await fetch(`${BASE_URL}/one-rep-maxes?user_id=${userId}`);
+      const res = await apiFetch("/one-rep-maxes");
       if (!res.ok) throw new Error("Failed to fetch user one rep maxes");
       const json = await res.json();
       return OneRepMaxSchema.parse(json);

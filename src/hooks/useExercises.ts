@@ -1,12 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { BASE_URL } from "../globals";
+import { apiFetch } from "../auth";
 import { ExerciseListSchema, ExerciseSchema } from "../schemas/exerciseSchema";
 
 export function useGetExercises() {
   return useQuery({
     queryKey: ["exercises"],
     queryFn: async () => {
-      const res = await fetch(`${BASE_URL}/exercises`);
+      const res = await apiFetch("/exercises");
       if (!res.ok) throw new Error("Failed to fetch exercises!");
       const json = await res.json();
       return ExerciseListSchema.parse(json);
@@ -22,7 +22,7 @@ export function useCreateExercise() {
       equipment_type: string;
       weight_increment: number;
     }) => {
-      const response = await fetch(`${BASE_URL}/exercises`, {
+      const response = await apiFetch("/exercises", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -31,6 +31,8 @@ export function useCreateExercise() {
       });
       if (response.status === 409)
         throw new Error("Exercise already exists");
+      if (response.status === 403)
+        throw new Error("Admin access required");
       if (!response.ok) throw new Error("Error creating exercise");
       const json = await response.json();
       return ExerciseSchema.parse(json);

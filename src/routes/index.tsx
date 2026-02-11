@@ -5,7 +5,6 @@ import { useGetActiveWeekLogs } from "../hooks/useGetActiveWeekLogs";
 import { useActiveProgramId } from "../hooks/usePrograms";
 import { useEffect } from "react";
 import { Box, CircularProgress, Typography } from "@mui/material";
-import { USER_ID } from "../globals";
 
 export const Route = createFileRoute("/")({
   component: LandingPage,
@@ -14,7 +13,7 @@ export const Route = createFileRoute("/")({
 function LandingPage() {
   const { selectedDay, setSelectedDay, handleDayButtonClick } =
     useDaySelector();
-  const activeProgramId = useActiveProgramId(USER_ID);
+  const activeProgramId = useActiveProgramId();
   const query = useGetActiveWeekLogs(activeProgramId);
 
   useEffect(() => {

@@ -21,11 +21,11 @@ import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
-import { useGetExercises, useCreateExercise } from "../../../hooks/useExercises";
-import { useCreateProgram } from "../../../hooks/useCreateProgram";
-import type { Exercise } from "../../../schemas/exerciseSchema";
+import { useGetExercises, useCreateExercise } from "../hooks/useExercises";
+import { useCreateProgram } from "../hooks/useCreateProgram";
+import type { Exercise } from "../schemas/exerciseSchema";
 
-export const Route = createFileRoute("/users/$userId/create-program")({
+export const Route = createFileRoute("/create-program")({
   component: RouteComponent,
 });
 
@@ -402,7 +402,6 @@ function DayCard({
 }
 
 function RouteComponent() {
-  const { userId } = Route.useParams();
   const navigate = useNavigate();
   const { data: exercises = [] } = useGetExercises();
   const createProgram = useCreateProgram();
@@ -457,7 +456,7 @@ function RouteComponent() {
     }
 
     // Build payload
-    const exercises = days.flatMap((day) =>
+    const exercisePayload = days.flatMap((day) =>
       day.exercises.map((ex) => ({
         exercise_id: ex.exercise_id!,
         workout_day: day.day,
@@ -471,10 +470,9 @@ function RouteComponent() {
     try {
       await createProgram.mutateAsync({
         name: programName.trim(),
-        user_id: Number(userId),
-        exercises,
+        exercises: exercisePayload,
       });
-      navigate({ to: "/users/$userId/program", params: { userId } });
+      navigate({ to: "/program" });
     } catch {
       setError("Failed to create program. Please try again.");
     }
@@ -488,9 +486,7 @@ function RouteComponent() {
         alignItems="center"
         gap={1.5}
         sx={{ mb: 3, cursor: "pointer" }}
-        onClick={() =>
-          navigate({ to: "/users/$userId/account", params: { userId } })
-        }
+        onClick={() => navigate({ to: "/account" })}
       >
         <ArrowBackIcon sx={{ color: "text.secondary", fontSize: 20 }} />
         <Typography color="text.secondary" fontSize="0.9rem">

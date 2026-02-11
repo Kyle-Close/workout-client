@@ -1,18 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
-import { BASE_URL } from "../globals";
+import { apiFetch } from "../auth";
 import z from "zod";
 
 const ActiveWeekSchema = z.number();
 
-export function useGetActiveWeekNumber(
-  userId: number,
-  workoutProgramId: number,
-) {
+export function useGetActiveWeekNumber(workoutProgramId: number) {
   const getActiveWeekQuery = useQuery({
-    queryKey: ["activeWeek", userId, workoutProgramId],
+    queryKey: ["activeWeek", workoutProgramId],
     queryFn: async () => {
-      const res = await fetch(
-        `${BASE_URL}/active-week?user_id=${userId}&workout_program_id=${workoutProgramId}`,
+      const res = await apiFetch(
+        `/active-week?workout_program_id=${workoutProgramId}`,
       );
       if (!res.ok) throw new Error("Failed to fetch active week.");
       const json = await res.json();

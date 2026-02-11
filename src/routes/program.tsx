@@ -27,7 +27,7 @@ import {
   useUpdateProgramName,
   useUpdateProgramExercises,
   useDeleteProgram,
-} from "../../../hooks/usePrograms";
+} from "../hooks/usePrograms";
 import { useState } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
@@ -40,9 +40,9 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import type {
   ProgramDay,
   ProgramExercise,
-} from "../../../schemas/programSchema";
+} from "../schemas/programSchema";
 
-export const Route = createFileRoute("/users/$userId/program")({
+export const Route = createFileRoute("/program")({
   component: RouteComponent,
 });
 
@@ -300,11 +300,9 @@ function DayAccordion({
 
 function ProgramDetail({
   programId,
-  userId,
   onBack,
 }: {
   programId: number;
-  userId: string;
   onBack: () => void;
 }) {
   const { data, isLoading, isError, error } = useGetProgramDetail(programId);
@@ -358,10 +356,7 @@ function ProgramDetail({
 
   const handleDelete = async () => {
     try {
-      await deleteProgram.mutateAsync({
-        programId,
-        userId: Number(userId),
-      });
+      await deleteProgram.mutateAsync(programId);
       setConfirmOpen(false);
       onBack();
     } catch {
@@ -564,14 +559,12 @@ function ProgramDetail({
 }
 
 function ProgramsList({
-  userId,
   onSelect,
 }: {
-  userId: string;
   onSelect: (id: number) => void;
 }) {
   const navigate = useNavigate();
-  const { data, isLoading, isError, error } = useGetPrograms(Number(userId));
+  const { data, isLoading, isError, error } = useGetPrograms();
 
   if (isError) {
     return (
@@ -614,12 +607,7 @@ function ProgramsList({
         <Button
           startIcon={<AddIcon />}
           variant="contained"
-          onClick={() =>
-            navigate({
-              to: "/users/$userId/create-program",
-              params: { userId },
-            })
-          }
+          onClick={() => navigate({ to: "/create-program" })}
         >
           Create Program
         </Button>
@@ -693,12 +681,7 @@ function ProgramsList({
       <Button
         fullWidth
         startIcon={<AddIcon />}
-        onClick={() =>
-          navigate({
-            to: "/users/$userId/create-program",
-            params: { userId },
-          })
-        }
+        onClick={() => navigate({ to: "/create-program" })}
         sx={{
           mt: 2,
           border: "1px dashed rgba(255,255,255,0.2)",
@@ -715,7 +698,6 @@ function ProgramsList({
 }
 
 function RouteComponent() {
-  const { userId } = Route.useParams();
   const [selectedProgramId, setSelectedProgramId] = useState<number | null>(
     null,
   );
@@ -725,11 +707,10 @@ function RouteComponent() {
       {selectedProgramId ? (
         <ProgramDetail
           programId={selectedProgramId}
-          userId={userId}
           onBack={() => setSelectedProgramId(null)}
         />
       ) : (
-        <ProgramsList userId={userId} onSelect={setSelectedProgramId} />
+        <ProgramsList onSelect={setSelectedProgramId} />
       )}
     </Box>
   );

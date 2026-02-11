@@ -25,7 +25,6 @@ import {
   ReferenceLine,
 } from "recharts";
 import { useExerciseHistory } from "../hooks/useExerciseHistory";
-import { USER_ID } from "../globals";
 import type { ExerciseHistoryEntry } from "../schemas/exerciseHistorySchema";
 
 interface ExerciseHistoryModalProps {
@@ -101,7 +100,7 @@ export function ExerciseHistoryModal({
 }: ExerciseHistoryModalProps) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const { data, isLoading, isError } = useExerciseHistory(USER_ID, exerciseId);
+  const { data, isLoading, isError } = useExerciseHistory(exerciseId);
 
   const history = data?.history ?? [];
   const hasData = history.length > 0;

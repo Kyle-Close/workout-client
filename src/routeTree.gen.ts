@@ -9,136 +9,190 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as WeightRouteImport } from './routes/weight'
+import { Route as ProgramRouteImport } from './routes/program'
+import { Route as OneRepMaxesRouteImport } from './routes/one-rep-maxes'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as CreateProgramRouteImport } from './routes/create-program'
+import { Route as AccountRouteImport } from './routes/account'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as UsersUserIdWeightRouteImport } from './routes/users/$userId/weight'
-import { Route as UsersUserIdProgramRouteImport } from './routes/users/$userId/program'
-import { Route as UsersUserIdOneRepMaxesRouteImport } from './routes/users/$userId/one-rep-maxes'
-import { Route as UsersUserIdCreateProgramRouteImport } from './routes/users/$userId/create-program'
-import { Route as UsersUserIdAccountRouteImport } from './routes/users/$userId/account'
-import { Route as UsersUserIdProgramsProgramIdHistoryRouteImport } from './routes/users/$userId/programs/$programId/history'
-import { Route as UsersUserIdProgramsProgramIdWeeksWeekIdLogsRouteImport } from './routes/users/$userId/programs/$programId/weeks/$weekId/logs'
+import { Route as ProgramsProgramIdHistoryRouteImport } from './routes/programs/$programId/history'
+import { Route as ProgramsProgramIdWeeksWeekIdLogsRouteImport } from './routes/programs/$programId/weeks/$weekId/logs'
 
+const WeightRoute = WeightRouteImport.update({
+  id: '/weight',
+  path: '/weight',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProgramRoute = ProgramRouteImport.update({
+  id: '/program',
+  path: '/program',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OneRepMaxesRoute = OneRepMaxesRouteImport.update({
+  id: '/one-rep-maxes',
+  path: '/one-rep-maxes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CreateProgramRoute = CreateProgramRouteImport.update({
+  id: '/create-program',
+  path: '/create-program',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccountRoute = AccountRouteImport.update({
+  id: '/account',
+  path: '/account',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const UsersUserIdWeightRoute = UsersUserIdWeightRouteImport.update({
-  id: '/users/$userId/weight',
-  path: '/users/$userId/weight',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const UsersUserIdProgramRoute = UsersUserIdProgramRouteImport.update({
-  id: '/users/$userId/program',
-  path: '/users/$userId/program',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const UsersUserIdOneRepMaxesRoute = UsersUserIdOneRepMaxesRouteImport.update({
-  id: '/users/$userId/one-rep-maxes',
-  path: '/users/$userId/one-rep-maxes',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const UsersUserIdCreateProgramRoute =
-  UsersUserIdCreateProgramRouteImport.update({
-    id: '/users/$userId/create-program',
-    path: '/users/$userId/create-program',
+const ProgramsProgramIdHistoryRoute =
+  ProgramsProgramIdHistoryRouteImport.update({
+    id: '/programs/$programId/history',
+    path: '/programs/$programId/history',
     getParentRoute: () => rootRouteImport,
   } as any)
-const UsersUserIdAccountRoute = UsersUserIdAccountRouteImport.update({
-  id: '/users/$userId/account',
-  path: '/users/$userId/account',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const UsersUserIdProgramsProgramIdHistoryRoute =
-  UsersUserIdProgramsProgramIdHistoryRouteImport.update({
-    id: '/users/$userId/programs/$programId/history',
-    path: '/users/$userId/programs/$programId/history',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const UsersUserIdProgramsProgramIdWeeksWeekIdLogsRoute =
-  UsersUserIdProgramsProgramIdWeeksWeekIdLogsRouteImport.update({
-    id: '/users/$userId/programs/$programId/weeks/$weekId/logs',
-    path: '/users/$userId/programs/$programId/weeks/$weekId/logs',
+const ProgramsProgramIdWeeksWeekIdLogsRoute =
+  ProgramsProgramIdWeeksWeekIdLogsRouteImport.update({
+    id: '/programs/$programId/weeks/$weekId/logs',
+    path: '/programs/$programId/weeks/$weekId/logs',
     getParentRoute: () => rootRouteImport,
   } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/users/$userId/account': typeof UsersUserIdAccountRoute
-  '/users/$userId/create-program': typeof UsersUserIdCreateProgramRoute
-  '/users/$userId/one-rep-maxes': typeof UsersUserIdOneRepMaxesRoute
-  '/users/$userId/program': typeof UsersUserIdProgramRoute
-  '/users/$userId/weight': typeof UsersUserIdWeightRoute
-  '/users/$userId/programs/$programId/history': typeof UsersUserIdProgramsProgramIdHistoryRoute
-  '/users/$userId/programs/$programId/weeks/$weekId/logs': typeof UsersUserIdProgramsProgramIdWeeksWeekIdLogsRoute
+  '/account': typeof AccountRoute
+  '/create-program': typeof CreateProgramRoute
+  '/login': typeof LoginRoute
+  '/one-rep-maxes': typeof OneRepMaxesRoute
+  '/program': typeof ProgramRoute
+  '/weight': typeof WeightRoute
+  '/programs/$programId/history': typeof ProgramsProgramIdHistoryRoute
+  '/programs/$programId/weeks/$weekId/logs': typeof ProgramsProgramIdWeeksWeekIdLogsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/users/$userId/account': typeof UsersUserIdAccountRoute
-  '/users/$userId/create-program': typeof UsersUserIdCreateProgramRoute
-  '/users/$userId/one-rep-maxes': typeof UsersUserIdOneRepMaxesRoute
-  '/users/$userId/program': typeof UsersUserIdProgramRoute
-  '/users/$userId/weight': typeof UsersUserIdWeightRoute
-  '/users/$userId/programs/$programId/history': typeof UsersUserIdProgramsProgramIdHistoryRoute
-  '/users/$userId/programs/$programId/weeks/$weekId/logs': typeof UsersUserIdProgramsProgramIdWeeksWeekIdLogsRoute
+  '/account': typeof AccountRoute
+  '/create-program': typeof CreateProgramRoute
+  '/login': typeof LoginRoute
+  '/one-rep-maxes': typeof OneRepMaxesRoute
+  '/program': typeof ProgramRoute
+  '/weight': typeof WeightRoute
+  '/programs/$programId/history': typeof ProgramsProgramIdHistoryRoute
+  '/programs/$programId/weeks/$weekId/logs': typeof ProgramsProgramIdWeeksWeekIdLogsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/users/$userId/account': typeof UsersUserIdAccountRoute
-  '/users/$userId/create-program': typeof UsersUserIdCreateProgramRoute
-  '/users/$userId/one-rep-maxes': typeof UsersUserIdOneRepMaxesRoute
-  '/users/$userId/program': typeof UsersUserIdProgramRoute
-  '/users/$userId/weight': typeof UsersUserIdWeightRoute
-  '/users/$userId/programs/$programId/history': typeof UsersUserIdProgramsProgramIdHistoryRoute
-  '/users/$userId/programs/$programId/weeks/$weekId/logs': typeof UsersUserIdProgramsProgramIdWeeksWeekIdLogsRoute
+  '/account': typeof AccountRoute
+  '/create-program': typeof CreateProgramRoute
+  '/login': typeof LoginRoute
+  '/one-rep-maxes': typeof OneRepMaxesRoute
+  '/program': typeof ProgramRoute
+  '/weight': typeof WeightRoute
+  '/programs/$programId/history': typeof ProgramsProgramIdHistoryRoute
+  '/programs/$programId/weeks/$weekId/logs': typeof ProgramsProgramIdWeeksWeekIdLogsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/users/$userId/account'
-    | '/users/$userId/create-program'
-    | '/users/$userId/one-rep-maxes'
-    | '/users/$userId/program'
-    | '/users/$userId/weight'
-    | '/users/$userId/programs/$programId/history'
-    | '/users/$userId/programs/$programId/weeks/$weekId/logs'
+    | '/account'
+    | '/create-program'
+    | '/login'
+    | '/one-rep-maxes'
+    | '/program'
+    | '/weight'
+    | '/programs/$programId/history'
+    | '/programs/$programId/weeks/$weekId/logs'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/users/$userId/account'
-    | '/users/$userId/create-program'
-    | '/users/$userId/one-rep-maxes'
-    | '/users/$userId/program'
-    | '/users/$userId/weight'
-    | '/users/$userId/programs/$programId/history'
-    | '/users/$userId/programs/$programId/weeks/$weekId/logs'
+    | '/account'
+    | '/create-program'
+    | '/login'
+    | '/one-rep-maxes'
+    | '/program'
+    | '/weight'
+    | '/programs/$programId/history'
+    | '/programs/$programId/weeks/$weekId/logs'
   id:
     | '__root__'
     | '/'
-    | '/users/$userId/account'
-    | '/users/$userId/create-program'
-    | '/users/$userId/one-rep-maxes'
-    | '/users/$userId/program'
-    | '/users/$userId/weight'
-    | '/users/$userId/programs/$programId/history'
-    | '/users/$userId/programs/$programId/weeks/$weekId/logs'
+    | '/account'
+    | '/create-program'
+    | '/login'
+    | '/one-rep-maxes'
+    | '/program'
+    | '/weight'
+    | '/programs/$programId/history'
+    | '/programs/$programId/weeks/$weekId/logs'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  UsersUserIdAccountRoute: typeof UsersUserIdAccountRoute
-  UsersUserIdCreateProgramRoute: typeof UsersUserIdCreateProgramRoute
-  UsersUserIdOneRepMaxesRoute: typeof UsersUserIdOneRepMaxesRoute
-  UsersUserIdProgramRoute: typeof UsersUserIdProgramRoute
-  UsersUserIdWeightRoute: typeof UsersUserIdWeightRoute
-  UsersUserIdProgramsProgramIdHistoryRoute: typeof UsersUserIdProgramsProgramIdHistoryRoute
-  UsersUserIdProgramsProgramIdWeeksWeekIdLogsRoute: typeof UsersUserIdProgramsProgramIdWeeksWeekIdLogsRoute
+  AccountRoute: typeof AccountRoute
+  CreateProgramRoute: typeof CreateProgramRoute
+  LoginRoute: typeof LoginRoute
+  OneRepMaxesRoute: typeof OneRepMaxesRoute
+  ProgramRoute: typeof ProgramRoute
+  WeightRoute: typeof WeightRoute
+  ProgramsProgramIdHistoryRoute: typeof ProgramsProgramIdHistoryRoute
+  ProgramsProgramIdWeeksWeekIdLogsRoute: typeof ProgramsProgramIdWeeksWeekIdLogsRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/weight': {
+      id: '/weight'
+      path: '/weight'
+      fullPath: '/weight'
+      preLoaderRoute: typeof WeightRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/program': {
+      id: '/program'
+      path: '/program'
+      fullPath: '/program'
+      preLoaderRoute: typeof ProgramRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/one-rep-maxes': {
+      id: '/one-rep-maxes'
+      path: '/one-rep-maxes'
+      fullPath: '/one-rep-maxes'
+      preLoaderRoute: typeof OneRepMaxesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/create-program': {
+      id: '/create-program'
+      path: '/create-program'
+      fullPath: '/create-program'
+      preLoaderRoute: typeof CreateProgramRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/account': {
+      id: '/account'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof AccountRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -146,53 +200,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/users/$userId/weight': {
-      id: '/users/$userId/weight'
-      path: '/users/$userId/weight'
-      fullPath: '/users/$userId/weight'
-      preLoaderRoute: typeof UsersUserIdWeightRouteImport
+    '/programs/$programId/history': {
+      id: '/programs/$programId/history'
+      path: '/programs/$programId/history'
+      fullPath: '/programs/$programId/history'
+      preLoaderRoute: typeof ProgramsProgramIdHistoryRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/users/$userId/program': {
-      id: '/users/$userId/program'
-      path: '/users/$userId/program'
-      fullPath: '/users/$userId/program'
-      preLoaderRoute: typeof UsersUserIdProgramRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/users/$userId/one-rep-maxes': {
-      id: '/users/$userId/one-rep-maxes'
-      path: '/users/$userId/one-rep-maxes'
-      fullPath: '/users/$userId/one-rep-maxes'
-      preLoaderRoute: typeof UsersUserIdOneRepMaxesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/users/$userId/create-program': {
-      id: '/users/$userId/create-program'
-      path: '/users/$userId/create-program'
-      fullPath: '/users/$userId/create-program'
-      preLoaderRoute: typeof UsersUserIdCreateProgramRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/users/$userId/account': {
-      id: '/users/$userId/account'
-      path: '/users/$userId/account'
-      fullPath: '/users/$userId/account'
-      preLoaderRoute: typeof UsersUserIdAccountRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/users/$userId/programs/$programId/history': {
-      id: '/users/$userId/programs/$programId/history'
-      path: '/users/$userId/programs/$programId/history'
-      fullPath: '/users/$userId/programs/$programId/history'
-      preLoaderRoute: typeof UsersUserIdProgramsProgramIdHistoryRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/users/$userId/programs/$programId/weeks/$weekId/logs': {
-      id: '/users/$userId/programs/$programId/weeks/$weekId/logs'
-      path: '/users/$userId/programs/$programId/weeks/$weekId/logs'
-      fullPath: '/users/$userId/programs/$programId/weeks/$weekId/logs'
-      preLoaderRoute: typeof UsersUserIdProgramsProgramIdWeeksWeekIdLogsRouteImport
+    '/programs/$programId/weeks/$weekId/logs': {
+      id: '/programs/$programId/weeks/$weekId/logs'
+      path: '/programs/$programId/weeks/$weekId/logs'
+      fullPath: '/programs/$programId/weeks/$weekId/logs'
+      preLoaderRoute: typeof ProgramsProgramIdWeeksWeekIdLogsRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -200,15 +219,14 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  UsersUserIdAccountRoute: UsersUserIdAccountRoute,
-  UsersUserIdCreateProgramRoute: UsersUserIdCreateProgramRoute,
-  UsersUserIdOneRepMaxesRoute: UsersUserIdOneRepMaxesRoute,
-  UsersUserIdProgramRoute: UsersUserIdProgramRoute,
-  UsersUserIdWeightRoute: UsersUserIdWeightRoute,
-  UsersUserIdProgramsProgramIdHistoryRoute:
-    UsersUserIdProgramsProgramIdHistoryRoute,
-  UsersUserIdProgramsProgramIdWeeksWeekIdLogsRoute:
-    UsersUserIdProgramsProgramIdWeeksWeekIdLogsRoute,
+  AccountRoute: AccountRoute,
+  CreateProgramRoute: CreateProgramRoute,
+  LoginRoute: LoginRoute,
+  OneRepMaxesRoute: OneRepMaxesRoute,
+  ProgramRoute: ProgramRoute,
+  WeightRoute: WeightRoute,
+  ProgramsProgramIdHistoryRoute: ProgramsProgramIdHistoryRoute,
+  ProgramsProgramIdWeeksWeekIdLogsRoute: ProgramsProgramIdWeeksWeekIdLogsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

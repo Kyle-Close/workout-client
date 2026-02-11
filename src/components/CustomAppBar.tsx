@@ -3,11 +3,13 @@ import Toolbar from "@mui/material/Toolbar";
 import { AppBar, IconButton } from "@mui/material";
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import LogoutIcon from "@mui/icons-material/Logout";
 import { useNavigate } from "@tanstack/react-router";
-import { USER_ID } from "../globals";
+import { useAuth } from "../auth";
 
 export default function CustomAppBar() {
   const navigate = useNavigate();
+  const { logout, isAuthenticated } = useAuth();
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -46,21 +48,43 @@ export default function CustomAppBar() {
               }}
             />
           </IconButton>
-          <IconButton
-            onClick={() => navigate({ to: `/users/${USER_ID}/account` })}
-            aria-label="account"
-            sx={{
-              width: 42,
-              height: 42,
-              color: "text.secondary",
-              "&:hover": {
-                bgcolor: "rgba(255,255,255,0.06)",
-                color: "text.primary",
-              },
-            }}
-          >
-            <AccountCircleIcon sx={{ fontSize: 26 }} />
-          </IconButton>
+          {isAuthenticated && (
+            <Box sx={{ display: "flex", gap: 0.5 }}>
+              <IconButton
+                onClick={() => navigate({ to: "/account" })}
+                aria-label="account"
+                sx={{
+                  width: 42,
+                  height: 42,
+                  color: "text.secondary",
+                  "&:hover": {
+                    bgcolor: "rgba(255,255,255,0.06)",
+                    color: "text.primary",
+                  },
+                }}
+              >
+                <AccountCircleIcon sx={{ fontSize: 26 }} />
+              </IconButton>
+              <IconButton
+                onClick={() => {
+                  logout();
+                  navigate({ to: "/login" });
+                }}
+                aria-label="logout"
+                sx={{
+                  width: 42,
+                  height: 42,
+                  color: "text.secondary",
+                  "&:hover": {
+                    bgcolor: "rgba(255,255,255,0.06)",
+                    color: "text.primary",
+                  },
+                }}
+              >
+                <LogoutIcon sx={{ fontSize: 22 }} />
+              </IconButton>
+            </Box>
+          )}
         </Toolbar>
       </AppBar>
     </Box>

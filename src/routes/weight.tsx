@@ -20,10 +20,10 @@ import {
   useGetUserWeight,
   useCreateUserWeight,
   useDeleteUserWeight,
-} from "../../../hooks/useUserWeight";
-import type { UserWeightEntry } from "../../../schemas/userWeightSchema";
+} from "../hooks/useUserWeight";
+import type { UserWeightEntry } from "../schemas/userWeightSchema";
 
-export const Route = createFileRoute("/users/$userId/weight")({
+export const Route = createFileRoute("/weight")({
   component: RouteComponent,
 });
 
@@ -100,7 +100,7 @@ function CurrentWeightCard({ entries }: { entries: UserWeightEntry[] }) {
   );
 }
 
-function LogWeightForm({ userId }: { userId: string }) {
+function LogWeightForm() {
   const [weight, setWeight] = useState("");
   const [date, setDate] = useState(getTodayString());
   const createWeight = useCreateUserWeight();
@@ -112,7 +112,6 @@ function LogWeightForm({ userId }: { userId: string }) {
 
     try {
       await createWeight.mutateAsync({
-        user_id: Number(userId),
         weight: parsed,
         date,
       });
@@ -308,9 +307,8 @@ function EmptyState() {
 }
 
 function RouteComponent() {
-  const { userId } = Route.useParams();
   const navigate = useNavigate();
-  const { data: entries, isLoading, isError, error } = useGetUserWeight(Number(userId));
+  const { data: entries, isLoading, isError, error } = useGetUserWeight();
 
   if (isError) {
     return (
@@ -342,9 +340,7 @@ function RouteComponent() {
         alignItems="center"
         gap={1.5}
         sx={{ mb: 3, cursor: "pointer" }}
-        onClick={() =>
-          navigate({ to: "/users/$userId/account", params: { userId } })
-        }
+        onClick={() => navigate({ to: "/account" })}
       >
         <ArrowBackIcon sx={{ color: "text.secondary", fontSize: 20 }} />
         <Typography color="text.secondary" fontSize="0.9rem">
@@ -378,7 +374,7 @@ function RouteComponent() {
       </Stack>
 
       <CurrentWeightCard entries={entries} />
-      <LogWeightForm userId={userId} />
+      <LogWeightForm />
 
       {entries.length > 0 ? (
         <WeightHistory entries={entries} />

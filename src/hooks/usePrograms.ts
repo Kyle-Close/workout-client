@@ -34,6 +34,54 @@ export function useGetProgramDetail(programId: number) {
   });
 }
 
+export function useUpdateProgramName(programId: number) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (name: string) => {
+      const response = await fetch(`${BASE_URL}/programs/${programId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name }),
+      });
+      if (!response.ok) throw new Error("Failed to update program name");
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["program", programId] });
+      queryClient.invalidateQueries({ queryKey: ["programs"] });
+    },
+  });
+}
+
+export function useUpdateProgramExercises(programId: number) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (
+      exercises: {
+        id: number;
+        target_sets: number;
+        target_reps: number;
+        intensity: number;
+      }[],
+    ) => {
+      const response = await fetch(
+        `${BASE_URL}/programs/${programId}/exercises`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ exercises }),
+        },
+      );
+      if (!response.ok) throw new Error("Failed to update exercises");
+      const json = await response.json();
+      return ProgramDetailSchema.parse(json);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["program", programId] });
+    },
+  });
+}
+
 export function useDeleteProgram() {
   const queryClient = useQueryClient();
   return useMutation({

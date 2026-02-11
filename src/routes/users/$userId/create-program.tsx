@@ -12,11 +12,13 @@ import {
   Stack,
   Switch,
   TextField,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { useState } from "react";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import { useGetExercises, useCreateExercise } from "../../../hooks/useExercises";
@@ -94,15 +96,24 @@ function ExerciseFormRow({
   return (
     <Box
       sx={{
-        py: 1.5,
-        px: 1.5,
-        borderRadius: "8px",
+        p: 2,
+        borderRadius: "10px",
         bgcolor: "rgba(255,255,255,0.04)",
         border: 1,
         borderColor: "rgba(255,255,255,0.08)",
       }}
     >
-      <Stack spacing={1.5}>
+      <Stack spacing={2}>
+        {/* Header row: delete button */}
+        <Stack direction="row" justifyContent="space-between" alignItems="center">
+          <Typography fontSize="0.75rem" color="text.secondary" fontWeight={500} textTransform="uppercase" letterSpacing={0.5}>
+            Exercise
+          </Typography>
+          <IconButton size="small" onClick={onDelete} sx={{ color: "text.secondary" }}>
+            <DeleteOutlineIcon fontSize="small" />
+          </IconButton>
+        </Stack>
+
         {/* Exercise selection */}
         {creatingNew ? (
           <Stack spacing={1.5}>
@@ -113,7 +124,7 @@ function ExerciseFormRow({
               value={newName}
               onChange={(e) => setNewName(e.target.value)}
             />
-            <Stack direction="row" spacing={1}>
+            <Stack direction="row" spacing={1.5}>
               <Select
                 size="small"
                 value={newEquipmentType}
@@ -127,14 +138,14 @@ function ExerciseFormRow({
                 ))}
               </Select>
               <TextField
-                label="Weight Inc."
+                label="Weight Increment"
                 size="small"
                 type="number"
                 value={newWeightIncrement}
                 onChange={(e) =>
                   setNewWeightIncrement(Number(e.target.value))
                 }
-                sx={{ width: 100 }}
+                sx={{ width: 120 }}
               />
             </Stack>
             {createExercise.isError && (
@@ -160,98 +171,119 @@ function ExerciseFormRow({
             </Stack>
           </Stack>
         ) : (
-          <Stack direction="row" spacing={1} alignItems="center">
-            <Autocomplete
-              size="small"
-              fullWidth
-              options={exercises}
-              getOptionLabel={(option) =>
-                `${option.name} (${option.equipment_type})`
-              }
-              value={selectedExercise}
-              onChange={(_, value) => {
-                onUpdate({
-                  ...entry,
-                  exercise_id: value ? value.id : null,
-                });
-              }}
-              isOptionEqualToValue={(option, value) =>
-                option.id === value.id
-              }
-              renderInput={(params) => (
-                <TextField {...params} label="Select Exercise" />
-              )}
-            />
-            <Button
-              size="small"
-              onClick={() => setCreatingNew(true)}
-              sx={{ whiteSpace: "nowrap", minWidth: "auto" }}
-            >
-              + New
-            </Button>
-          </Stack>
+          <Autocomplete
+            size="small"
+            fullWidth
+            options={exercises}
+            getOptionLabel={(option) =>
+              `${option.name} (${option.equipment_type})`
+            }
+            value={selectedExercise}
+            onChange={(_, value) => {
+              onUpdate({
+                ...entry,
+                exercise_id: value ? value.id : null,
+              });
+            }}
+            isOptionEqualToValue={(option, value) =>
+              option.id === value.id
+            }
+            noOptionsText={
+              <Button
+                size="small"
+                onClick={() => setCreatingNew(true)}
+                sx={{ textTransform: "none" }}
+              >
+                Create new exercise
+              </Button>
+            }
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Search exercises"
+                placeholder="Type to search..."
+              />
+            )}
+          />
         )}
 
-        {/* Sets, Reps, Intensity */}
-        <Stack direction="row" spacing={1}>
-          <TextField
-            label="Sets"
-            size="small"
-            type="number"
-            value={entry.target_sets}
-            onChange={(e) =>
-              onUpdate({ ...entry, target_sets: Number(e.target.value) })
-            }
-            sx={{ flex: 1 }}
-          />
-          <TextField
-            label="Reps"
-            size="small"
-            type="number"
-            value={entry.target_reps}
-            onChange={(e) =>
-              onUpdate({ ...entry, target_reps: Number(e.target.value) })
-            }
-            sx={{ flex: 1 }}
-          />
-          <TextField
-            label="Intensity %"
-            size="small"
-            type="number"
-            value={entry.intensity}
-            onChange={(e) =>
-              onUpdate({ ...entry, intensity: Number(e.target.value) })
-            }
-            sx={{ flex: 1 }}
-          />
-        </Stack>
+        {/* Configuration */}
+        <Box>
+          <Typography
+            fontSize="0.75rem"
+            color="text.secondary"
+            fontWeight={500}
+            textTransform="uppercase"
+            letterSpacing={0.5}
+            sx={{ mb: 1 }}
+          >
+            Configuration
+          </Typography>
+          <Stack direction="row" spacing={1.5}>
+            <TextField
+              label="Sets"
+              size="small"
+              type="number"
+              value={entry.target_sets}
+              onChange={(e) =>
+                onUpdate({ ...entry, target_sets: Number(e.target.value) })
+              }
+              sx={{ flex: 1 }}
+              slotProps={{ htmlInput: { min: 1 } }}
+            />
+            <TextField
+              label="Reps"
+              size="small"
+              type="number"
+              value={entry.target_reps}
+              onChange={(e) =>
+                onUpdate({ ...entry, target_reps: Number(e.target.value) })
+              }
+              sx={{ flex: 1 }}
+              slotProps={{ htmlInput: { min: 1 } }}
+            />
+            <TextField
+              label="Intensity"
+              size="small"
+              type="number"
+              value={entry.intensity}
+              onChange={(e) =>
+                onUpdate({ ...entry, intensity: Number(e.target.value) })
+              }
+              sx={{ flex: 1 }}
+              slotProps={{
+                htmlInput: { min: 1, max: 100 },
+                input: {
+                  endAdornment: (
+                    <Tooltip title="Percentage of your one-rep max (1RM) for this exercise" arrow>
+                      <InfoOutlinedIcon
+                        sx={{ fontSize: 16, color: "text.secondary", cursor: "help" }}
+                      />
+                    </Tooltip>
+                  ),
+                },
+              }}
+            />
+          </Stack>
+        </Box>
 
-        {/* Optional toggle + Delete */}
-        <Stack
-          direction="row"
-          justifyContent="space-between"
-          alignItems="center"
-        >
-          <FormControlLabel
-            control={
-              <Switch
-                size="small"
-                checked={entry.optional}
-                onChange={(e) =>
-                  onUpdate({ ...entry, optional: e.target.checked })
-                }
-              />
-            }
-            label={
-              <Typography fontSize="0.85rem" color="text.secondary">
-                Optional
-              </Typography>
-            }
-          />
-          <IconButton size="small" onClick={onDelete} color="error">
-            <DeleteOutlineIcon fontSize="small" />
-          </IconButton>
-        </Stack>
+        {/* Optional toggle */}
+        <FormControlLabel
+          control={
+            <Switch
+              size="small"
+              checked={entry.optional}
+              onChange={(e) =>
+                onUpdate({ ...entry, optional: e.target.checked })
+              }
+            />
+          }
+          label={
+            <Typography fontSize="0.85rem" color="text.secondary">
+              Optional
+            </Typography>
+          }
+        />
       </Stack>
     </Box>
   );

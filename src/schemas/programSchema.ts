@@ -6,6 +6,7 @@ export const ProgramSummarySchema = z.object({
 });
 
 export const ProgramExerciseSchema = z.object({
+  id: z.number(),
   exercise_name: z.string(),
   target_sets: z.number(),
   target_reps: z.number(),

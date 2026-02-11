@@ -12,12 +12,20 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  IconButton,
+  ListItemIcon,
+  ListItemText,
+  Menu,
+  MenuItem,
   Stack,
+  TextField,
   Typography,
 } from "@mui/material";
 import {
   useGetPrograms,
   useGetProgramDetail,
+  useUpdateProgramName,
+  useUpdateProgramExercises,
   useDeleteProgram,
 } from "../../../hooks/usePrograms";
 import { useState } from "react";
@@ -26,7 +34,9 @@ import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import AddIcon from "@mui/icons-material/Add";
+import EditIcon from "@mui/icons-material/Edit";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 import type {
   ProgramDay,
   ProgramExercise,
@@ -43,8 +53,30 @@ const EQUIPMENT_COLORS: Record<string, string> = {
   "BODY WEIGHT": "#ffcc80",
 };
 
-function ExerciseRow({ exercise }: { exercise: ProgramExercise }) {
+type ExerciseEdits = Record<
+  number,
+  { target_sets: number; target_reps: number; intensity: number }
+>;
+
+function ExerciseRow({
+  exercise,
+  editing,
+  edits,
+  onEdit,
+}: {
+  exercise: ProgramExercise;
+  editing: boolean;
+  edits?: { target_sets: number; target_reps: number; intensity: number };
+  onEdit?: (values: {
+    target_sets: number;
+    target_reps: number;
+    intensity: number;
+  }) => void;
+}) {
   const equipmentColor = EQUIPMENT_COLORS[exercise.equipment_type] || "#9e9e9e";
+  const sets = edits?.target_sets ?? exercise.target_sets;
+  const reps = edits?.target_reps ?? exercise.target_reps;
+  const intensity = edits?.intensity ?? exercise.intensity;
 
   return (
     <Box
@@ -67,7 +99,8 @@ function ExerciseRow({ exercise }: { exercise: ProgramExercise }) {
       <Box
         sx={{
           width: 4,
-          height: 32,
+          height: editing ? "auto" : 32,
+          alignSelf: "stretch",
           borderRadius: "2px",
           bgcolor: equipmentColor,
           flexShrink: 0,
@@ -100,20 +133,71 @@ function ExerciseRow({ exercise }: { exercise: ProgramExercise }) {
             />
           )}
         </Stack>
-        <Stack direction="row" justifyContent="space-between" gap={2} mt={0.25}>
-          <Typography variant="caption" color="text.secondary">
-            {exercise.target_sets} x {exercise.target_reps}
-          </Typography>
-          <Typography variant="caption" color="text.secondary">
-            {exercise.intensity}%
-          </Typography>
-        </Stack>
+        {editing ? (
+          <Stack direction="row" gap={1} mt={0.75}>
+            <TextField
+              label="Sets"
+              size="small"
+              type="number"
+              value={sets}
+              onChange={(e) =>
+                onEdit?.({ target_sets: Number(e.target.value), target_reps: reps, intensity })
+              }
+              sx={{ flex: 1 }}
+              slotProps={{ htmlInput: { min: 1 } }}
+            />
+            <TextField
+              label="Reps"
+              size="small"
+              type="number"
+              value={reps}
+              onChange={(e) =>
+                onEdit?.({ target_sets: sets, target_reps: Number(e.target.value), intensity })
+              }
+              sx={{ flex: 1 }}
+              slotProps={{ htmlInput: { min: 1 } }}
+            />
+            <TextField
+              label="Intensity %"
+              size="small"
+              type="number"
+              value={intensity}
+              onChange={(e) =>
+                onEdit?.({ target_sets: sets, target_reps: reps, intensity: Number(e.target.value) })
+              }
+              sx={{ flex: 1 }}
+              slotProps={{ htmlInput: { min: 1, max: 100 } }}
+            />
+          </Stack>
+        ) : (
+          <Stack direction="row" justifyContent="space-between" gap={2} mt={0.25}>
+            <Typography variant="caption" color="text.secondary">
+              {sets} x {reps}
+            </Typography>
+            <Typography variant="caption" color="text.secondary">
+              {intensity}%
+            </Typography>
+          </Stack>
+        )}
       </Box>
     </Box>
   );
 }
 
-function DayAccordion({ day }: { day: ProgramDay }) {
+function DayAccordion({
+  day,
+  editing,
+  edits,
+  onEdit,
+}: {
+  day: ProgramDay;
+  editing: boolean;
+  edits: ExerciseEdits;
+  onEdit: (
+    exerciseId: number,
+    values: { target_sets: number; target_reps: number; intensity: number },
+  ) => void;
+}) {
   const requiredCount = day.exercises.filter((e) => !e.optional).length;
   const optionalCount = day.exercises.filter((e) => e.optional).length;
 
@@ -199,8 +283,14 @@ function DayAccordion({ day }: { day: ProgramDay }) {
       </AccordionSummary>
       <AccordionDetails sx={{ px: 2, pt: 0, pb: 2 }}>
         <Stack spacing={1}>
-          {day.exercises.map((exercise, idx) => (
-            <ExerciseRow key={idx} exercise={exercise} />
+          {day.exercises.map((exercise) => (
+            <ExerciseRow
+              key={exercise.id}
+              exercise={exercise}
+              editing={editing}
+              edits={edits[exercise.id]}
+              onEdit={(values) => onEdit(exercise.id, values)}
+            />
           ))}
         </Stack>
       </AccordionDetails>
@@ -219,7 +309,52 @@ function ProgramDetail({
 }) {
   const { data, isLoading, isError, error } = useGetProgramDetail(programId);
   const deleteProgram = useDeleteProgram();
+  const updateExercises = useUpdateProgramExercises(programId);
+  const updateName = useUpdateProgramName(programId);
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
+  const [editing, setEditing] = useState(false);
+  const [edits, setEdits] = useState<ExerciseEdits>({});
+  const [editedName, setEditedName] = useState("");
+
+  const handleEditExercise = (
+    exerciseId: number,
+    values: { target_sets: number; target_reps: number; intensity: number },
+  ) => {
+    setEdits((prev) => ({ ...prev, [exerciseId]: values }));
+  };
+
+  const handleSave = async () => {
+    if (!data) return;
+    try {
+      const nameChanged = editedName.trim() && editedName.trim() !== data.name;
+      if (nameChanged) {
+        await updateName.mutateAsync(editedName.trim());
+      }
+      const allExercises = data.days.flatMap((day) => day.exercises);
+      const payload = allExercises.map((ex) => ({
+        id: ex.id,
+        target_sets: edits[ex.id]?.target_sets ?? ex.target_sets,
+        target_reps: edits[ex.id]?.target_reps ?? ex.target_reps,
+        intensity: edits[ex.id]?.intensity ?? ex.intensity,
+      }));
+      const hasExerciseEdits = Object.keys(edits).length > 0;
+      if (hasExerciseEdits) {
+        await updateExercises.mutateAsync(payload);
+      }
+      setEditing(false);
+      setEdits({});
+      setEditedName("");
+    } catch {
+      // errors available via updateName.error / updateExercises.error
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setEditing(false);
+    setEdits({});
+    setEditedName("");
+  };
 
   const handleDelete = async () => {
     try {
@@ -273,25 +408,66 @@ function ProgramDetail({
         </Typography>
       </Stack>
 
-      {/* Program name + delete */}
+      {/* Program name + actions */}
       <Stack
         direction="row"
         alignItems="center"
         justifyContent="space-between"
         sx={{ mb: 0.5 }}
       >
-        <Typography fontWeight={600} fontSize="1.25rem">
-          {data.name}
-        </Typography>
-        <Button
-          size="small"
-          color="error"
-          startIcon={<DeleteOutlineIcon />}
-          onClick={() => setConfirmOpen(true)}
-          sx={{ textTransform: "none" }}
-        >
-          Delete
-        </Button>
+        {editing ? (
+          <TextField
+            size="small"
+            value={editedName}
+            onChange={(e) => setEditedName(e.target.value)}
+            sx={{ flex: 1 }}
+          />
+        ) : (
+          <Typography fontWeight={600} fontSize="1.25rem">
+            {data.name}
+          </Typography>
+        )}
+        {!editing && (
+          <>
+            <IconButton
+              size="small"
+              onClick={(e) => setMenuAnchor(e.currentTarget)}
+            >
+              <MoreVertIcon />
+            </IconButton>
+            <Menu
+              anchorEl={menuAnchor}
+              open={Boolean(menuAnchor)}
+              onClose={() => setMenuAnchor(null)}
+            >
+              <MenuItem
+                onClick={() => {
+                  setMenuAnchor(null);
+                  setEditedName(data.name);
+                  setEditing(true);
+                }}
+              >
+                <ListItemIcon>
+                  <EditIcon fontSize="small" />
+                </ListItemIcon>
+                <ListItemText>Edit</ListItemText>
+              </MenuItem>
+              <MenuItem
+                onClick={() => {
+                  setMenuAnchor(null);
+                  setConfirmOpen(true);
+                }}
+              >
+                <ListItemIcon>
+                  <DeleteOutlineIcon fontSize="small" color="error" />
+                </ListItemIcon>
+                <ListItemText sx={{ color: "error.main" }}>
+                  Delete
+                </ListItemText>
+              </MenuItem>
+            </Menu>
+          </>
+        )}
       </Stack>
       <Typography color="text.secondary" fontSize="0.85rem" sx={{ mb: 3 }}>
         {data.days.length} day program
@@ -328,8 +504,37 @@ function ProgramDetail({
 
       {/* Days */}
       {data.days.map((day) => (
-        <DayAccordion key={day.day} day={day} />
+        <DayAccordion
+          key={day.day}
+          day={day}
+          editing={editing}
+          edits={edits}
+          onEdit={handleEditExercise}
+        />
       ))}
+
+      {/* Edit save/cancel */}
+      {editing && (
+        <Stack direction="row" gap={1} sx={{ mt: 2 }}>
+          <Button
+            variant="contained"
+            fullWidth
+            onClick={handleSave}
+            disabled={updateExercises.isPending || updateName.isPending}
+          >
+            {updateExercises.isPending || updateName.isPending
+              ? "Saving..."
+              : "Save Changes"}
+          </Button>
+          <Button
+            fullWidth
+            onClick={handleCancelEdit}
+            disabled={updateExercises.isPending || updateName.isPending}
+          >
+            Cancel
+          </Button>
+        </Stack>
+      )}
 
       {/* Delete confirmation dialog */}
       <Dialog open={confirmOpen} onClose={() => setConfirmOpen(false)}>

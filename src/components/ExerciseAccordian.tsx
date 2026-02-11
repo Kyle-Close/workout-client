@@ -5,10 +5,11 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { Box, Button, Chip, IconButton, Stack } from "@mui/material";
+import { Box, Button, Chip, Collapse, IconButton, Stack, TextField } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import DoneAllIcon from "@mui/icons-material/DoneAll";
+import NotesIcon from "@mui/icons-material/Notes";
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import TrendingDownIcon from "@mui/icons-material/TrendingDown";
@@ -71,8 +72,37 @@ export function ExerciseAccordian({
     });
   };
 
+  const handleNoteChange = (value: string) => {
+    setFormData((prevFormData) => {
+      const existing = prevFormData.find(
+        (log) => log.id === exercise.exercise_log_id,
+      );
+
+      if (!existing) {
+        const item: ExerciseLogFormEntry = {
+          id: exercise.exercise_log_id,
+          workout_day_exercise_id: exercise.workout_day_exercise_id,
+          program_week: exercise.program_week,
+          weight: exercise.weight,
+          sets_completed: exercise.sets_completed ?? 0,
+          reps_in_reserve: exercise.reps_in_reserve ?? 0,
+          notes: value,
+          completed: true,
+        };
+        return [...prevFormData, item];
+      } else {
+        return prevFormData.map((log) =>
+          log.id === exercise.exercise_log_id
+            ? { ...log, notes: value }
+            : log,
+        );
+      }
+    });
+  };
+
   const entry = formData.find((log) => log.id === exercise.exercise_log_id);
   const [historyOpen, setHistoryOpen] = useState(false);
+  const [noteOpen, setNoteOpen] = useState(false);
 
   const setsHit =
     exercise.sets_completed != null &&
@@ -433,6 +463,42 @@ export function ExerciseAccordian({
                   <PlateVisualizer plates={exercise.plates} />
                 </Box>
               )}
+
+            {/* Note toggle + input */}
+            <Box>
+              <Button
+                size="small"
+                startIcon={<NotesIcon sx={{ fontSize: 16 }} />}
+                onClick={() => setNoteOpen((prev) => !prev)}
+                sx={{
+                  textTransform: "none",
+                  color: entry?.notes ? "primary.main" : "text.secondary",
+                  fontSize: "0.75rem",
+                  px: 1,
+                  py: 0.25,
+                  minHeight: 0,
+                }}
+              >
+                {noteOpen ? "Hide note" : entry?.notes ? "Edit note" : "Add note"}
+              </Button>
+              <Collapse in={noteOpen}>
+                <TextField
+                  size="small"
+                  fullWidth
+                  multiline
+                  maxRows={3}
+                  placeholder="e.g. felt easy, grip slipping, left shoulder tight..."
+                  value={entry?.notes ?? ""}
+                  onChange={(e) => handleNoteChange(e.target.value)}
+                  sx={{
+                    mt: 0.5,
+                    "& .MuiOutlinedInput-root": {
+                      fontSize: "0.8rem",
+                    },
+                  }}
+                />
+              </Collapse>
+            </Box>
           </Box>
         ) : (
           <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 1.5 }}>
@@ -506,6 +572,33 @@ export function ExerciseAccordian({
               </Typography>
             </Box>
           </Box>
+        )}
+
+        {/* Note display for completed exercises */}
+        {exercise.completed && exercise.notes && (
+          <Stack
+            direction="row"
+            alignItems="flex-start"
+            gap={0.75}
+            sx={{
+              mt: 1.5,
+              px: 1.5,
+              py: 1,
+              borderRadius: "8px",
+              bgcolor: "rgba(255,255,255,0.03)",
+              border: 1,
+              borderColor: "rgba(255,255,255,0.06)",
+            }}
+          >
+            <NotesIcon sx={{ fontSize: 14, color: "text.secondary", mt: 0.25 }} />
+            <Typography
+              fontSize="0.8rem"
+              color="text.secondary"
+              sx={{ fontStyle: "italic" }}
+            >
+              {exercise.notes}
+            </Typography>
+          </Stack>
         )}
 
         {/* History Modal */}

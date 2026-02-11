@@ -24,6 +24,7 @@ export const ExerciseObjectForDayView = z.object({
   reps_in_reserve: z.number().nullable(),
   optional: z.boolean(),
   completed: z.boolean(),
+  notes: z.string().nullable().optional(),
   plates: PlatesSchema.optional(),
 });
 

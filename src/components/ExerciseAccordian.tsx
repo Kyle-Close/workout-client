@@ -5,8 +5,9 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { Box, Button, Chip, Stack } from "@mui/material";
-import NumberSpinner from "./NumberSpinner";
+import { Box, Button, Chip, IconButton, Stack } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+import RemoveIcon from "@mui/icons-material/Remove";
 import { USER_ID } from "../globals";
 import DoneAllIcon from "@mui/icons-material/DoneAll";
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
@@ -189,19 +190,21 @@ export function ExerciseAccordian({
         </Stack>
       </AccordionSummary>
 
-      <AccordionDetails sx={{ px: 2, pt: 0, pb: 2.5 }}>
+      <AccordionDetails sx={{ px: 2, pt: 0, pb: 2, overflow: "hidden" }}>
         {/* Target stats and history button */}
-        <Stack
-          direction="row"
-          spacing={1.5}
-          alignItems="stretch"
-          sx={{ mb: 2.5 }}
+        <Box
+          sx={{
+            display: "flex",
+            gap: 1.5,
+            alignItems: "stretch",
+            mb: 1.5,
+          }}
         >
-          <Stack
-            direction="row"
-            spacing={1}
+          <Box
             sx={{
               flex: 1,
+              display: "flex",
+              gap: 1,
               p: 1.5,
               borderRadius: "8px",
               bgcolor: "rgba(255,255,255,0.04)",
@@ -250,7 +253,7 @@ export function ExerciseAccordian({
                 {exercise.target_reps}
               </Typography>
             </Box>
-          </Stack>
+          </Box>
           <Button
             variant="outlined"
             onClick={() => setHistoryOpen(true)}
@@ -278,72 +281,140 @@ export function ExerciseAccordian({
               History
             </Typography>
           </Button>
-        </Stack>
+        </Box>
 
         {/* Input / completed results */}
         {!exercise.completed ? (
-          <Stack
-            direction={{ xs: "column", sm: "row" }}
-            spacing={1.5}
-            alignItems="stretch"
-          >
-            {/* Log results card */}
-            <Box
-              sx={{
-                flex: 1,
-                p: 1.5,
-                borderRadius: "8px",
-                bgcolor: "rgba(255,255,255,0.04)",
-                border: 1,
-                borderColor: "rgba(255,255,255,0.06)",
-              }}
-            >
-              <Typography
-                variant="caption"
-                color="text.secondary"
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
+            {/* Log results */}
+            <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 1.5 }}>
+              <Box
                 sx={{
-                  textTransform: "uppercase",
-                  letterSpacing: 0.5,
-                  display: "block",
-                  textAlign: "center",
-                  mb: 1.5,
+                  p: 1.5,
+                  borderRadius: "10px",
+                  bgcolor: "rgba(144, 202, 249, 0.06)",
+                  border: 1,
+                  borderColor: "rgba(144, 202, 249, 0.12)",
                 }}
               >
-                Log Results
-              </Typography>
-              <Stack
-                direction="row"
-                spacing={3}
-                justifyContent="center"
+                <Typography
+                  variant="caption"
+                  color="text.secondary"
+                  sx={{
+                    textTransform: "uppercase",
+                    letterSpacing: 0.5,
+                    display: "block",
+                    textAlign: "center",
+                    mb: 1,
+                    fontSize: "0.65rem",
+                  }}
+                >
+                  Sets Completed
+                </Typography>
+                <Stack direction="row" alignItems="center" justifyContent="center" spacing={1.5}>
+                  <IconButton
+                    size="small"
+                    onClick={() =>
+                      handleSpinnerChange(
+                        Math.max(0, (entry ? entry.sets_completed : (exercise.sets_completed ?? 0)) - 1),
+                        true,
+                      )
+                    }
+                    sx={{
+                      width: 36,
+                      height: 36,
+                      bgcolor: "rgba(255,255,255,0.06)",
+                      "&:hover": { bgcolor: "rgba(255,255,255,0.1)" },
+                    }}
+                  >
+                    <RemoveIcon sx={{ fontSize: 18 }} />
+                  </IconButton>
+                  <Typography fontWeight={700} fontSize="1.5rem" sx={{ minWidth: 32, textAlign: "center" }}>
+                    {entry ? entry.sets_completed : (exercise.sets_completed ?? 0)}
+                  </Typography>
+                  <IconButton
+                    size="small"
+                    onClick={() =>
+                      handleSpinnerChange(
+                        (entry ? entry.sets_completed : (exercise.sets_completed ?? 0)) + 1,
+                        true,
+                      )
+                    }
+                    sx={{
+                      width: 36,
+                      height: 36,
+                      bgcolor: "rgba(255,255,255,0.06)",
+                      "&:hover": { bgcolor: "rgba(255,255,255,0.1)" },
+                    }}
+                  >
+                    <AddIcon sx={{ fontSize: 18 }} />
+                  </IconButton>
+                </Stack>
+              </Box>
+
+              <Box
+                sx={{
+                  p: 1.5,
+                  borderRadius: "10px",
+                  bgcolor: "rgba(144, 202, 249, 0.06)",
+                  border: 1,
+                  borderColor: "rgba(144, 202, 249, 0.12)",
+                }}
               >
-                <Box>
-                  <NumberSpinner
-                    onValueChange={(e) => handleSpinnerChange(e, true)}
+                <Typography
+                  variant="caption"
+                  color="text.secondary"
+                  sx={{
+                    textTransform: "uppercase",
+                    letterSpacing: 0.5,
+                    display: "block",
+                    textAlign: "center",
+                    mb: 1,
+                    fontSize: "0.65rem",
+                  }}
+                >
+                  Reps in Reserve
+                </Typography>
+                <Stack direction="row" alignItems="center" justifyContent="center" spacing={1.5}>
+                  <IconButton
                     size="small"
-                    label="Sets Completed"
-                    min={0}
-                    defaultValue={0}
-                    value={
-                      entry
-                        ? entry.sets_completed
-                        : (exercise.sets_completed ?? 0)
+                    onClick={() =>
+                      handleSpinnerChange(
+                        (entry ? entry.reps_in_reserve : (exercise.reps_in_reserve ?? 0)) - 1,
+                        false,
+                      )
                     }
-                  />
-                </Box>
-                <Box>
-                  <NumberSpinner
-                    onValueChange={(e) => handleSpinnerChange(e, false)}
+                    sx={{
+                      width: 36,
+                      height: 36,
+                      bgcolor: "rgba(255,255,255,0.06)",
+                      "&:hover": { bgcolor: "rgba(255,255,255,0.1)" },
+                    }}
+                  >
+                    <RemoveIcon sx={{ fontSize: 18 }} />
+                  </IconButton>
+                  <Typography fontWeight={700} fontSize="1.5rem" sx={{ minWidth: 32, textAlign: "center" }}>
+                    {entry ? entry.reps_in_reserve : (exercise.reps_in_reserve ?? 0)}
+                  </Typography>
+                  <IconButton
                     size="small"
-                    label="Reps in Reserve"
-                    defaultValue={0}
-                    value={
-                      entry
-                        ? entry.reps_in_reserve
-                        : (exercise.reps_in_reserve ?? 0)
+                    onClick={() =>
+                      handleSpinnerChange(
+                        (entry ? entry.reps_in_reserve : (exercise.reps_in_reserve ?? 0)) + 1,
+                        false,
+                      )
                     }
-                  />
-                </Box>
-              </Stack>
+                    sx={{
+                      width: 36,
+                      height: 36,
+                      bgcolor: "rgba(255,255,255,0.06)",
+                      "&:hover": { bgcolor: "rgba(255,255,255,0.1)" },
+                    }}
+                  >
+                    <AddIcon sx={{ fontSize: 18 }} />
+                  </IconButton>
+                </Stack>
+              </Box>
             </Box>
 
             {/* Plate visualizer section */}
@@ -351,13 +422,11 @@ export function ExerciseAccordian({
               Object.values(exercise.plates).some((count) => count > 0) && (
                 <Box
                   sx={{
-                    flex: 1,
-                    minWidth: 0,
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
                     p: 1.5,
-                    borderRadius: "8px",
+                    borderRadius: "10px",
                     bgcolor: "rgba(255,255,255,0.04)",
                     border: 1,
                     borderColor: "rgba(255,255,255,0.06)",
@@ -366,12 +435,11 @@ export function ExerciseAccordian({
                   <PlateVisualizer plates={exercise.plates} />
                 </Box>
               )}
-          </Stack>
+          </Box>
         ) : (
-          <Stack direction="row" spacing={1.5} justifyContent="center">
+          <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 1.5 }}>
             <Box
               sx={{
-                flex: 1,
                 textAlign: "center",
                 py: 1.5,
                 px: 1,
@@ -402,7 +470,6 @@ export function ExerciseAccordian({
             </Box>
             <Box
               sx={{
-                flex: 1,
                 textAlign: "center",
                 py: 1.5,
                 px: 1,
@@ -440,7 +507,7 @@ export function ExerciseAccordian({
                 {exercise.reps_in_reserve}
               </Typography>
             </Box>
-          </Stack>
+          </Box>
         )}
 
         {/* History Modal */}

@@ -6,6 +6,7 @@ import { useActiveProgramId } from "../../../hooks/usePrograms";
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import HistoryIcon from "@mui/icons-material/History";
+import MonitorWeightIcon from "@mui/icons-material/MonitorWeight";
 import PersonIcon from "@mui/icons-material/Person";
 
 export const Route = createFileRoute("/users/$userId/account")({
@@ -59,6 +60,13 @@ function RouteComponent() {
           title="One Rep Maxes"
           description="Track your strength progress"
           icon={<EmojiEventsIcon fontSize="small" />}
+          params={{ userId: USER_ID }}
+        />
+        <AccountLink
+          url="/users/$userId/weight"
+          title="Body Weight"
+          description="Track your body weight"
+          icon={<MonitorWeightIcon fontSize="small" />}
           params={{ userId: USER_ID }}
         />
         {activeProgramId !== null && (

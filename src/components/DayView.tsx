@@ -1,4 +1,6 @@
-import { Button, Divider, Alert, Stack } from "@mui/material";
+import { useState } from "react";
+import { Box, Button, Alert, Stack, Typography } from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useExerciseLogForm } from "../hooks/useExerciseLogForm";
 import type { ExerciseForDayView } from "../schemas/currentWeekSchema";
 import { ExerciseAccordian } from "./ExerciseAccordian";
@@ -11,6 +13,7 @@ interface DayViewProps {
 export function DayView({ exerciseLogs, readOnly }: DayViewProps) {
   const { formData, setFormData, handleSubmit, completeDayMutation } =
     useExerciseLogForm();
+  const [optionalOpen, setOptionalOpen] = useState(false);
 
   // Filter optional exercises based on readOnly mode
   const optionalExercises = exerciseLogs.filter(
@@ -37,20 +40,55 @@ export function DayView({ exerciseLogs, readOnly }: DayViewProps) {
       })}
       {optionalToShow.length > 0 && (
         <>
-          <Divider
-            sx={{ m: 2, "& .MuiDivider-wrapper": { fontStyle: "italic" } }}
+          <Box
+            onClick={() => setOptionalOpen(!optionalOpen)}
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 0.75,
+              mt: 2,
+              mb: 1.5,
+              py: 1,
+              mx: 1,
+              borderRadius: "8px",
+              cursor: "pointer",
+              bgcolor: "rgba(255,255,255,0.03)",
+              border: 1,
+              borderColor: "rgba(255,255,255,0.08)",
+              transition: "all 0.2s ease",
+              "&:hover": {
+                bgcolor: "rgba(255,255,255,0.05)",
+                borderColor: "rgba(255,255,255,0.12)",
+              },
+            }}
           >
-            Optional
-          </Divider>
-          {optionalToShow.map((exercise, key) => (
-            <ExerciseAccordian
-              titleFontWeight="lighter"
-              exercise={exercise}
-              key={key}
-              formData={formData}
-              setFormData={setFormData}
+            <Typography
+              color="text.secondary"
+              fontSize="0.8rem"
+              fontWeight={500}
+            >
+              {optionalOpen ? "Hide" : "Show"} optional ({optionalToShow.length})
+            </Typography>
+            <ExpandMoreIcon
+              sx={{
+                fontSize: 18,
+                color: "text.secondary",
+                transition: "transform 0.2s ease",
+                transform: optionalOpen ? "rotate(180deg)" : "rotate(0deg)",
+              }}
             />
-          ))}
+          </Box>
+          {optionalOpen &&
+            optionalToShow.map((exercise, key) => (
+              <ExerciseAccordian
+                titleFontWeight="lighter"
+                exercise={exercise}
+                key={key}
+                formData={formData}
+                setFormData={setFormData}
+              />
+            ))}
         </>
       )}
       {!readOnly && (

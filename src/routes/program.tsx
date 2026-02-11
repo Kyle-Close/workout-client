@@ -27,6 +27,7 @@ import {
   useUpdateProgramName,
   useUpdateProgramExercises,
   useDeleteProgram,
+  useCreateRecommendedProgram,
 } from "../hooks/usePrograms";
 import { useState } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -37,10 +38,9 @@ import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import type {
-  ProgramDay,
-  ProgramExercise,
-} from "../schemas/programSchema";
+import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
+import ScienceIcon from "@mui/icons-material/Science";
+import type { ProgramDay, ProgramExercise } from "../schemas/programSchema";
 
 export const Route = createFileRoute("/program")({
   component: RouteComponent,
@@ -141,7 +141,11 @@ function ExerciseRow({
               type="number"
               value={sets}
               onChange={(e) =>
-                onEdit?.({ target_sets: Number(e.target.value), target_reps: reps, intensity })
+                onEdit?.({
+                  target_sets: Number(e.target.value),
+                  target_reps: reps,
+                  intensity,
+                })
               }
               sx={{ flex: 1 }}
               slotProps={{ htmlInput: { min: 1 } }}
@@ -152,7 +156,11 @@ function ExerciseRow({
               type="number"
               value={reps}
               onChange={(e) =>
-                onEdit?.({ target_sets: sets, target_reps: Number(e.target.value), intensity })
+                onEdit?.({
+                  target_sets: sets,
+                  target_reps: Number(e.target.value),
+                  intensity,
+                })
               }
               sx={{ flex: 1 }}
               slotProps={{ htmlInput: { min: 1 } }}
@@ -163,14 +171,23 @@ function ExerciseRow({
               type="number"
               value={intensity}
               onChange={(e) =>
-                onEdit?.({ target_sets: sets, target_reps: reps, intensity: Number(e.target.value) })
+                onEdit?.({
+                  target_sets: sets,
+                  target_reps: reps,
+                  intensity: Number(e.target.value),
+                })
               }
               sx={{ flex: 1 }}
               slotProps={{ htmlInput: { min: 1, max: 100 } }}
             />
           </Stack>
         ) : (
-          <Stack direction="row" justifyContent="space-between" gap={2} mt={0.25}>
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            gap={2}
+            mt={0.25}
+          >
             <Typography variant="caption" color="text.secondary">
               {sets} x {reps}
             </Typography>
@@ -456,9 +473,7 @@ function ProgramDetail({
                 <ListItemIcon>
                   <DeleteOutlineIcon fontSize="small" color="error" />
                 </ListItemIcon>
-                <ListItemText sx={{ color: "error.main" }}>
-                  Delete
-                </ListItemText>
+                <ListItemText sx={{ color: "error.main" }}>Delete</ListItemText>
               </MenuItem>
             </Menu>
           </>
@@ -542,7 +557,10 @@ function ProgramDetail({
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setConfirmOpen(false)} disabled={deleteProgram.isPending}>
+          <Button
+            onClick={() => setConfirmOpen(false)}
+            disabled={deleteProgram.isPending}
+          >
             Cancel
           </Button>
           <Button
@@ -558,11 +576,88 @@ function ProgramDetail({
   );
 }
 
-function ProgramsList({
-  onSelect,
-}: {
-  onSelect: (id: number) => void;
-}) {
+function SuggestedProgramCard() {
+  const navigate = useNavigate();
+  const createRecommended = useCreateRecommendedProgram();
+
+  const handleCreate = async () => {
+    try {
+      await createRecommended.mutateAsync();
+      navigate({ to: "/setup-maxes" });
+    } catch {
+      // error is available via createRecommended.error
+    }
+  };
+
+  return (
+    <Box
+      sx={{
+        p: 3,
+        borderRadius: "16px",
+        background:
+          "linear-gradient(135deg, rgba(103,126,234,0.15) 0%, rgba(118,75,162,0.15) 100%)",
+        border: "1px solid rgba(103,126,234,0.3)",
+        mb: 3,
+      }}
+    >
+      <Stack direction="row" alignItems="flex-start" gap={2}>
+        <Box
+          sx={{
+            width: 48,
+            height: 48,
+            borderRadius: "12px",
+            background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            flexShrink: 0,
+          }}
+        >
+          <ScienceIcon sx={{ color: "white", fontSize: 24 }} />
+        </Box>
+        <Box sx={{ flex: 1 }}>
+          <Stack direction="row" alignItems="center" gap={1} sx={{ mb: 0.5 }}>
+            <Typography fontWeight={600} fontSize="1.1rem" color="white">
+              Stronger by Science
+            </Typography>
+            <AutoAwesomeIcon sx={{ fontSize: 16, color: "#667eea" }} />
+          </Stack>
+          <Typography
+            fontSize="0.85rem"
+            color="text.secondary"
+            sx={{ mb: 2, lineHeight: 1.5 }}
+          >
+            A proven 5-day program based on scientific principles. Features
+            automatic progression and adapts to your performance each week.
+          </Typography>
+          <Button
+            variant="contained"
+            onClick={handleCreate}
+            disabled={createRecommended.isPending}
+            sx={{
+              background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+              textTransform: "none",
+              fontWeight: 600,
+              px: 3,
+              "&:hover": {
+                background: "linear-gradient(135deg, #5a6fd6 0%, #6a4190 100%)",
+              },
+            }}
+          >
+            {createRecommended.isPending ? "Creating..." : "Use This Program"}
+          </Button>
+          {createRecommended.isError && (
+            <Typography color="error" fontSize="0.8rem" sx={{ mt: 1 }}>
+              Failed to create program. Please try again.
+            </Typography>
+          )}
+        </Box>
+      </Stack>
+    </Box>
+  );
+}
+
+function ProgramsList({ onSelect }: { onSelect: (id: number) => void }) {
   const navigate = useNavigate();
   const { data, isLoading, isError, error } = useGetPrograms();
 
@@ -591,25 +686,53 @@ function ProgramsList({
 
   if (data.length === 0) {
     return (
-      <Box
-        sx={{
-          textAlign: "center",
-          py: 6,
-          px: 3,
-        }}
-      >
-        <FitnessCenterIcon
-          sx={{ fontSize: 48, color: "text.disabled", mb: 2 }}
-        />
-        <Typography color="text.secondary" sx={{ mb: 3 }}>
-          No programs found for this account.
-        </Typography>
-        <Button
-          startIcon={<AddIcon />}
-          variant="contained"
-          onClick={() => navigate({ to: "/create-program" })}
+      <Box>
+        <Stack
+          direction="row"
+          alignItems="center"
+          gap={1.5}
+          sx={{ mb: 3, cursor: "pointer" }}
+          onClick={() => navigate({ to: "/account" })}
         >
-          Create Program
+          <ArrowBackIcon sx={{ color: "text.secondary", fontSize: 20 }} />
+          <Typography color="text.secondary" fontSize="0.9rem">
+            Back to account
+          </Typography>
+        </Stack>
+        <Typography fontWeight={600} fontSize="1.1rem" sx={{ mb: 0.5 }}>
+          Get Started
+        </Typography>
+        <Typography color="text.secondary" fontSize="0.9rem" sx={{ mb: 3 }}>
+          Choose a recommended program or create your own.
+        </Typography>
+
+        <SuggestedProgramCard />
+
+        <Typography
+          color="text.secondary"
+          fontSize="0.85rem"
+          sx={{ mb: 2, textAlign: "center" }}
+        >
+          or
+        </Typography>
+
+        <Button
+          fullWidth
+          startIcon={<AddIcon />}
+          onClick={() => navigate({ to: "/create-program" })}
+          sx={{
+            border: "1px dashed rgba(255,255,255,0.2)",
+            borderRadius: "12px",
+            color: "text.secondary",
+            textTransform: "none",
+            py: 1.5,
+            "&:hover": {
+              borderColor: "rgba(255,255,255,0.4)",
+              bgcolor: "rgba(255,255,255,0.03)",
+            },
+          }}
+        >
+          Create Custom Program
         </Button>
       </Box>
     );
@@ -617,6 +740,18 @@ function ProgramsList({
 
   return (
     <Box>
+      <Stack
+        direction="row"
+        alignItems="center"
+        gap={1.5}
+        sx={{ mb: 3, cursor: "pointer" }}
+        onClick={() => navigate({ to: "/account" })}
+      >
+        <ArrowBackIcon sx={{ color: "text.secondary", fontSize: 20 }} />
+        <Typography color="text.secondary" fontSize="0.9rem">
+          Back to account
+        </Typography>
+      </Stack>
       <Typography fontWeight={600} fontSize="1.1rem" sx={{ mb: 2 }}>
         Your Programs
       </Typography>
@@ -678,20 +813,31 @@ function ProgramsList({
           </Box>
         ))}
       </Stack>
+
+      {/* Add new program section */}
+      <Typography fontWeight={600} fontSize="1.1rem" sx={{ mt: 4, mb: 2 }}>
+        Add a Program
+      </Typography>
+
+      <SuggestedProgramCard />
+
       <Button
         fullWidth
         startIcon={<AddIcon />}
         onClick={() => navigate({ to: "/create-program" })}
         sx={{
-          mt: 2,
           border: "1px dashed rgba(255,255,255,0.2)",
           borderRadius: "12px",
           color: "text.secondary",
           textTransform: "none",
           py: 1.5,
+          "&:hover": {
+            borderColor: "rgba(255,255,255,0.4)",
+            bgcolor: "rgba(255,255,255,0.03)",
+          },
         }}
       >
-        Create Program
+        Create Custom Program
       </Button>
     </Box>
   );

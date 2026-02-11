@@ -18,6 +18,16 @@ export function WeeklyView({
   handleDayButtonClick,
   readOnly,
 }: WeeklyViewProps) {
+  if (!weekData || weekData.length === 0) {
+    return (
+      <Box sx={{ px: { xs: 2, sm: 3 }, py: 3 }}>
+        <Typography color="text.secondary" textAlign="center">
+          No workout data available. Please set up your one-rep maxes to generate your weekly schedule.
+        </Typography>
+      </Box>
+    );
+  }
+
   const weekNumber = weekData[0].program_week;
 
   const minDay = 1;

@@ -472,7 +472,7 @@ function RouteComponent() {
         name: programName.trim(),
         exercises: exercisePayload,
       });
-      navigate({ to: "/program" });
+      navigate({ to: "/setup-maxes" });
     } catch {
       setError("Failed to create program. Please try again.");
     }

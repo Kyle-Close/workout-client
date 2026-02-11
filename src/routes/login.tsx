@@ -70,7 +70,7 @@ function LoginPage() {
           }}
         />
         <Typography fontWeight={700} fontSize="1.5rem">
-          Workout Tracker
+          Progression
         </Typography>
       </Box>
 

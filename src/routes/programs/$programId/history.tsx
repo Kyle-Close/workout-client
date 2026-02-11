@@ -5,10 +5,12 @@ import {
   Grid,
   Button,
   CircularProgress,
+  Stack,
 } from "@mui/material";
 import { useGetActiveWeekNumber } from "../../../hooks/useGetActiveWeekNumber";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import HistoryIcon from "@mui/icons-material/History";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 export const Route = createFileRoute(
   "/programs/$programId/history",
@@ -17,6 +19,7 @@ export const Route = createFileRoute(
 });
 
 function RouteComponent() {
+  const navigate = useNavigate();
   const { programId } = Route.useParams();
   const { getActiveWeekQuery } = useGetActiveWeekNumber(Number(programId));
 
@@ -65,6 +68,18 @@ function RouteComponent() {
 
   return (
     <Box sx={{ px: { xs: 2, sm: 3 }, py: 3 }}>
+      <Stack
+        direction="row"
+        alignItems="center"
+        gap={1.5}
+        sx={{ mb: 3, cursor: "pointer" }}
+        onClick={() => navigate({ to: "/account" })}
+      >
+        <ArrowBackIcon sx={{ color: "text.secondary", fontSize: 20 }} />
+        <Typography color="text.secondary" fontSize="0.9rem">
+          Back to account
+        </Typography>
+      </Stack>
       <Box
         sx={{
           display: "flex",

@@ -96,3 +96,37 @@ export function useDeleteProgram() {
     },
   });
 }
+
+export function useCreateRecommendedProgram() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async () => {
+      const response = await apiFetch("/programs/recommended", {
+        method: "POST",
+      });
+      if (!response.ok) throw new Error("Failed to create recommended program");
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["programs"] });
+    },
+  });
+}
+
+export function useGenerateWeekLogs() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (workoutProgramId: number) => {
+      const response = await apiFetch("/generate-logs-week", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ workout_program_id: workoutProgramId }),
+      });
+      if (!response.ok) throw new Error("Failed to generate week logs");
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["activeWeekLogs"] });
+    },
+  });
+}

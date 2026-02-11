@@ -14,13 +14,16 @@ export default function CustomAppBar() {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar
-        position="static"
+        position="sticky"
         elevation={0}
         sx={{
-          bgcolor: "rgba(255,255,255,0.03)",
+          top: 0,
+          bgcolor: "rgba(15,15,20,0.85)",
+          backdropFilter: "blur(12px)",
           borderBottom: 1,
           borderColor: "rgba(255,255,255,0.08)",
           backgroundImage: "none",
+          zIndex: (theme) => theme.zIndex.appBar,
         }}
       >
         <Toolbar

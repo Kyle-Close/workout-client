@@ -10,9 +10,11 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WeightRouteImport } from './routes/weight'
+import { Route as SetupMaxesRouteImport } from './routes/setup-maxes'
 import { Route as ProgramRouteImport } from './routes/program'
 import { Route as OneRepMaxesRouteImport } from './routes/one-rep-maxes'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as CreateProgramRouteImport } from './routes/create-program'
 import { Route as AccountRouteImport } from './routes/account'
 import { Route as IndexRouteImport } from './routes/index'
@@ -22,6 +24,11 @@ import { Route as ProgramsProgramIdWeeksWeekIdLogsRouteImport } from './routes/p
 const WeightRoute = WeightRouteImport.update({
   id: '/weight',
   path: '/weight',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SetupMaxesRoute = SetupMaxesRouteImport.update({
+  id: '/setup-maxes',
+  path: '/setup-maxes',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProgramRoute = ProgramRouteImport.update({
@@ -37,6 +44,11 @@ const OneRepMaxesRoute = OneRepMaxesRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CreateProgramRoute = CreateProgramRouteImport.update({
@@ -71,9 +83,11 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/account': typeof AccountRoute
   '/create-program': typeof CreateProgramRoute
+  '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
   '/one-rep-maxes': typeof OneRepMaxesRoute
   '/program': typeof ProgramRoute
+  '/setup-maxes': typeof SetupMaxesRoute
   '/weight': typeof WeightRoute
   '/programs/$programId/history': typeof ProgramsProgramIdHistoryRoute
   '/programs/$programId/weeks/$weekId/logs': typeof ProgramsProgramIdWeeksWeekIdLogsRoute
@@ -82,9 +96,11 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/account': typeof AccountRoute
   '/create-program': typeof CreateProgramRoute
+  '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
   '/one-rep-maxes': typeof OneRepMaxesRoute
   '/program': typeof ProgramRoute
+  '/setup-maxes': typeof SetupMaxesRoute
   '/weight': typeof WeightRoute
   '/programs/$programId/history': typeof ProgramsProgramIdHistoryRoute
   '/programs/$programId/weeks/$weekId/logs': typeof ProgramsProgramIdWeeksWeekIdLogsRoute
@@ -94,9 +110,11 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/account': typeof AccountRoute
   '/create-program': typeof CreateProgramRoute
+  '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
   '/one-rep-maxes': typeof OneRepMaxesRoute
   '/program': typeof ProgramRoute
+  '/setup-maxes': typeof SetupMaxesRoute
   '/weight': typeof WeightRoute
   '/programs/$programId/history': typeof ProgramsProgramIdHistoryRoute
   '/programs/$programId/weeks/$weekId/logs': typeof ProgramsProgramIdWeeksWeekIdLogsRoute
@@ -107,9 +125,11 @@ export interface FileRouteTypes {
     | '/'
     | '/account'
     | '/create-program'
+    | '/dashboard'
     | '/login'
     | '/one-rep-maxes'
     | '/program'
+    | '/setup-maxes'
     | '/weight'
     | '/programs/$programId/history'
     | '/programs/$programId/weeks/$weekId/logs'
@@ -118,9 +138,11 @@ export interface FileRouteTypes {
     | '/'
     | '/account'
     | '/create-program'
+    | '/dashboard'
     | '/login'
     | '/one-rep-maxes'
     | '/program'
+    | '/setup-maxes'
     | '/weight'
     | '/programs/$programId/history'
     | '/programs/$programId/weeks/$weekId/logs'
@@ -129,9 +151,11 @@ export interface FileRouteTypes {
     | '/'
     | '/account'
     | '/create-program'
+    | '/dashboard'
     | '/login'
     | '/one-rep-maxes'
     | '/program'
+    | '/setup-maxes'
     | '/weight'
     | '/programs/$programId/history'
     | '/programs/$programId/weeks/$weekId/logs'
@@ -141,9 +165,11 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AccountRoute: typeof AccountRoute
   CreateProgramRoute: typeof CreateProgramRoute
+  DashboardRoute: typeof DashboardRoute
   LoginRoute: typeof LoginRoute
   OneRepMaxesRoute: typeof OneRepMaxesRoute
   ProgramRoute: typeof ProgramRoute
+  SetupMaxesRoute: typeof SetupMaxesRoute
   WeightRoute: typeof WeightRoute
   ProgramsProgramIdHistoryRoute: typeof ProgramsProgramIdHistoryRoute
   ProgramsProgramIdWeeksWeekIdLogsRoute: typeof ProgramsProgramIdWeeksWeekIdLogsRoute
@@ -156,6 +182,13 @@ declare module '@tanstack/react-router' {
       path: '/weight'
       fullPath: '/weight'
       preLoaderRoute: typeof WeightRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/setup-maxes': {
+      id: '/setup-maxes'
+      path: '/setup-maxes'
+      fullPath: '/setup-maxes'
+      preLoaderRoute: typeof SetupMaxesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/program': {
@@ -177,6 +210,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/create-program': {
@@ -221,9 +261,11 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AccountRoute: AccountRoute,
   CreateProgramRoute: CreateProgramRoute,
+  DashboardRoute: DashboardRoute,
   LoginRoute: LoginRoute,
   OneRepMaxesRoute: OneRepMaxesRoute,
   ProgramRoute: ProgramRoute,
+  SetupMaxesRoute: SetupMaxesRoute,
   WeightRoute: WeightRoute,
   ProgramsProgramIdHistoryRoute: ProgramsProgramIdHistoryRoute,
   ProgramsProgramIdWeeksWeekIdLogsRoute: ProgramsProgramIdWeeksWeekIdLogsRoute,

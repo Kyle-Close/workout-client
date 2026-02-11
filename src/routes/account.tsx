@@ -8,6 +8,7 @@ import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import HistoryIcon from "@mui/icons-material/History";
 import MonitorWeightIcon from "@mui/icons-material/MonitorWeight";
 import PersonIcon from "@mui/icons-material/Person";
+import TodayIcon from "@mui/icons-material/Today";
 
 export const Route = createFileRoute("/account")({
   component: RouteComponent,
@@ -50,9 +51,15 @@ function RouteComponent() {
       {/* Navigation links */}
       <Stack gap={1.5}>
         <AccountLink
+          url="/dashboard"
+          title="Today's Workout"
+          description="Log your current workout"
+          icon={<TodayIcon fontSize="small" />}
+        />
+        <AccountLink
           url="/program"
-          title="Program"
-          description="View your training program"
+          title="Programs"
+          description="View and manage your training programs"
           icon={<FitnessCenterIcon fontSize="small" />}
         />
         <AccountLink

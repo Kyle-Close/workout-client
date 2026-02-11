@@ -11,19 +11,17 @@ import {
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import MonitorWeightIcon from "@mui/icons-material/MonitorWeight";
 import { useState, useMemo } from "react";
-import { useGetProgramDetail, useActiveProgramId, useGenerateWeekLogs } from "../hooks/usePrograms";
+import {
+  useGetProgramDetail,
+  useActiveProgramId,
+  useGenerateWeekLogs,
+} from "../hooks/usePrograms";
 import { useSetOneRepMaxes } from "../hooks/useOneRepMax";
 import { useCreateUserWeight } from "../hooks/useUserWeight";
 
 export const Route = createFileRoute("/setup-maxes")({
   component: SetupMaxesPage,
 });
-
-interface ExerciseMaxInput {
-  exercise_id: number;
-  exercise_name: string;
-  value: string;
-}
 
 function getTodayString(): string {
   const now = new Date();
@@ -36,7 +34,11 @@ function getTodayString(): string {
 function SetupMaxesPage() {
   const navigate = useNavigate();
   const activeProgramId = useActiveProgramId();
-  const { data: program, isLoading, isError } = useGetProgramDetail(activeProgramId ?? 0);
+  const {
+    data: program,
+    isLoading,
+    isError,
+  } = useGetProgramDetail(activeProgramId ?? 0);
   const setMaxes = useSetOneRepMaxes();
   const generateLogs = useGenerateWeekLogs();
   const createUserWeight = useCreateUserWeight();
@@ -47,7 +49,10 @@ function SetupMaxesPage() {
   const uniqueExercises = useMemo(() => {
     if (!program) return [];
 
-    const exerciseMap = new Map<number, { exercise_id: number; exercise_name: string; equipment_type: string }>();
+    const exerciseMap = new Map<
+      number,
+      { exercise_id: number; exercise_name: string; equipment_type: string }
+    >();
 
     for (const day of program.days) {
       for (const exercise of day.exercises) {
@@ -67,7 +72,7 @@ function SetupMaxesPage() {
   // Check if program has any assisted exercises (require user's body weight)
   const hasAssistedExercises = useMemo(() => {
     return uniqueExercises.some((ex) =>
-      ex.exercise_name.toLowerCase().includes("assisted")
+      ex.exercise_name.toLowerCase().includes("assisted"),
     );
   }, [uniqueExercises]);
 
@@ -76,10 +81,11 @@ function SetupMaxesPage() {
   };
 
   const allMaxesFilled = uniqueExercises.every(
-    (ex) => maxInputs[ex.exercise_id] && Number(maxInputs[ex.exercise_id]) > 0
+    (ex) => maxInputs[ex.exercise_id] && Number(maxInputs[ex.exercise_id]) > 0,
   );
 
-  const bodyWeightFilled = !hasAssistedExercises || (bodyWeight && Number(bodyWeight) > 0);
+  const bodyWeightFilled =
+    !hasAssistedExercises || (bodyWeight && Number(bodyWeight) > 0);
 
   const allFieldsFilled = allMaxesFilled && bodyWeightFilled;
 
@@ -108,7 +114,8 @@ function SetupMaxesPage() {
     }
   };
 
-  const isSubmitting = setMaxes.isPending || generateLogs.isPending || createUserWeight.isPending;
+  const isSubmitting =
+    setMaxes.isPending || generateLogs.isPending || createUserWeight.isPending;
 
   if (!activeProgramId) {
     return (
@@ -159,7 +166,8 @@ function SetupMaxesPage() {
             width: 64,
             height: 64,
             borderRadius: "16px",
-            background: "linear-gradient(135deg, rgba(144,202,249,0.2) 0%, rgba(144,202,249,0.05) 100%)",
+            background:
+              "linear-gradient(135deg, rgba(144,202,249,0.2) 0%, rgba(144,202,249,0.05) 100%)",
             border: "1px solid rgba(144,202,249,0.3)",
             display: "flex",
             alignItems: "center",
@@ -174,7 +182,8 @@ function SetupMaxesPage() {
           Set Your Starting Weights
         </Typography>
         <Typography color="text.secondary" sx={{ maxWidth: 400, mx: "auto" }}>
-          Enter your estimated one-rep max for each exercise. This helps calculate your working weights.
+          Enter your estimated one-rep max for each exercise. This helps
+          calculate your working weights.
         </Typography>
       </Box>
 
@@ -194,7 +203,8 @@ function SetupMaxesPage() {
             p: 2.5,
             mb: 3,
             borderRadius: "12px",
-            background: "linear-gradient(135deg, rgba(255,183,77,0.1) 0%, rgba(255,183,77,0.03) 100%)",
+            background:
+              "linear-gradient(135deg, rgba(255,183,77,0.1) 0%, rgba(255,183,77,0.03) 100%)",
             border: "1px solid rgba(255,183,77,0.2)",
           }}
         >
@@ -205,7 +215,8 @@ function SetupMaxesPage() {
             </Typography>
           </Stack>
           <Typography color="text.secondary" fontSize="0.8rem" sx={{ mb: 2 }}>
-            Your program includes assisted exercises. We need your weight to calculate the correct load.
+            Your program includes assisted exercises. We need your weight to
+            calculate the correct load.
           </Typography>
           <TextField
             fullWidth
@@ -217,7 +228,9 @@ function SetupMaxesPage() {
             slotProps={{
               htmlInput: { min: 1 },
               input: {
-                endAdornment: <InputAdornment position="end">lbs</InputAdornment>,
+                endAdornment: (
+                  <InputAdornment position="end">lbs</InputAdornment>
+                ),
               },
             }}
             sx={{
@@ -250,11 +263,15 @@ function SetupMaxesPage() {
               type="number"
               placeholder="Enter weight"
               value={maxInputs[exercise.exercise_id] || ""}
-              onChange={(e) => handleInputChange(exercise.exercise_id, e.target.value)}
+              onChange={(e) =>
+                handleInputChange(exercise.exercise_id, e.target.value)
+              }
               slotProps={{
                 htmlInput: { min: 1 },
                 input: {
-                  endAdornment: <InputAdornment position="end">lbs</InputAdornment>,
+                  endAdornment: (
+                    <InputAdornment position="end">lbs</InputAdornment>
+                  ),
                 },
               }}
               sx={{
@@ -273,7 +290,8 @@ function SetupMaxesPage() {
         color="text.secondary"
         sx={{ mb: 3, textAlign: "center" }}
       >
-        Not sure? Estimate based on a weight you could lift for 1 rep with good form.
+        Not sure? Estimate based on a weight you could lift for 1 rep with good
+        form.
       </Typography>
 
       {/* Submit button */}
@@ -294,8 +312,14 @@ function SetupMaxesPage() {
         {isSubmitting ? "Setting up..." : "Start Training"}
       </Button>
 
-      {(setMaxes.isError || generateLogs.isError || createUserWeight.isError) && (
-        <Typography color="error" fontSize="0.85rem" sx={{ mt: 2, textAlign: "center" }}>
+      {(setMaxes.isError ||
+        generateLogs.isError ||
+        createUserWeight.isError) && (
+        <Typography
+          color="error"
+          fontSize="0.85rem"
+          sx={{ mt: 2, textAlign: "center" }}
+        >
           Failed to save. Please try again.
         </Typography>
       )}

@@ -23,7 +23,10 @@ export function useCreateProgram() {
         },
         body: JSON.stringify(data),
       });
-      if (!response.ok) throw new Error("Error creating program");
+      if (!response.ok) {
+        const body = await response.json().catch(() => null);
+        throw new Error(body?.detail || "Error creating program");
+      }
       const json = await response.json();
       return ProgramDetailSchema.parse(json);
     },

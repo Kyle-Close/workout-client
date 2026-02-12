@@ -648,7 +648,7 @@ function SuggestedProgramCard() {
           </Button>
           {createRecommended.isError && (
             <Typography color="error" fontSize="0.8rem" sx={{ mt: 1 }}>
-              Failed to create program. Please try again.
+              {createRecommended.error.message}
             </Typography>
           )}
         </Box>
@@ -814,31 +814,6 @@ function ProgramsList({ onSelect }: { onSelect: (id: number) => void }) {
         ))}
       </Stack>
 
-      {/* Add new program section */}
-      <Typography fontWeight={600} fontSize="1.1rem" sx={{ mt: 4, mb: 2 }}>
-        Add a Program
-      </Typography>
-
-      <SuggestedProgramCard />
-
-      <Button
-        fullWidth
-        startIcon={<AddIcon />}
-        onClick={() => navigate({ to: "/create-program" })}
-        sx={{
-          border: "1px dashed rgba(255,255,255,0.2)",
-          borderRadius: "12px",
-          color: "text.secondary",
-          textTransform: "none",
-          py: 1.5,
-          "&:hover": {
-            borderColor: "rgba(255,255,255,0.4)",
-            bgcolor: "rgba(255,255,255,0.03)",
-          },
-        }}
-      >
-        Create Custom Program
-      </Button>
     </Box>
   );
 }

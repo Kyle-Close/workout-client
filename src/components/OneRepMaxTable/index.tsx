@@ -37,6 +37,8 @@ interface OneRepMaxTableProps {
 export default function OneRepMaxTable({ data }: OneRepMaxTableProps) {
   const [sortKey, setSortKey] = useState<SortKey>("exercise_name");
   const [sortDir, setSortDir] = useState<SortDirection>("asc");
+  const [search, setSearch] = useState("");
+  const [searchOpen, setSearchOpen] = useState(false);
 
   const handleSort = (key: SortKey) => {
     if (key === sortKey) {
@@ -47,9 +49,20 @@ export default function OneRepMaxTable({ data }: OneRepMaxTableProps) {
     }
   };
 
+  const handleSearchToggle = () => {
+    setSearchOpen((prev) => !prev);
+    setSearch("");
+  };
+
+  const filtered = useMemo(() => {
+    if (!search) return data;
+    const q = search.toLowerCase();
+    return data.filter((e) => e.exercise_name.toLowerCase().includes(q));
+  }, [data, search]);
+
   const sorted = useMemo(
-    () => [...data].sort((a, b) => comparator(a, b, sortKey, sortDir)),
-    [data, sortKey, sortDir],
+    () => [...filtered].sort((a, b) => comparator(a, b, sortKey, sortDir)),
+    [filtered, sortKey, sortDir],
   );
 
   return (
@@ -63,7 +76,12 @@ export default function OneRepMaxTable({ data }: OneRepMaxTableProps) {
       }}
     >
       <Box sx={{ backgroundColor: "grey.900" }}>
-        <TableHeader />
+        <TableHeader
+          search={search}
+          searchOpen={searchOpen}
+          onSearchChange={setSearch}
+          onSearchToggle={handleSearchToggle}
+        />
         <Table aria-label="one rep max table header">
           <TableHeaderCells sortKey={sortKey} sortDir={sortDir} onSort={handleSort} />
         </Table>

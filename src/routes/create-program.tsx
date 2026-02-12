@@ -473,8 +473,8 @@ function RouteComponent() {
         exercises: exercisePayload,
       });
       navigate({ to: "/setup-maxes" });
-    } catch {
-      setError("Failed to create program. Please try again.");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to create program. Please try again.");
     }
   };
 

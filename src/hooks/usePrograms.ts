@@ -104,7 +104,10 @@ export function useCreateRecommendedProgram() {
       const response = await apiFetch("/programs/recommended", {
         method: "POST",
       });
-      if (!response.ok) throw new Error("Failed to create recommended program");
+      if (!response.ok) {
+        const body = await response.json().catch(() => null);
+        throw new Error(body?.detail || "Failed to create recommended program");
+      }
       return response.json();
     },
     onSuccess: () => {

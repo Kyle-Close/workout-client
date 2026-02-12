@@ -25,7 +25,8 @@ export function HeroSection() {
           transform: "translate(-50%, -50%)",
           width: { xs: 300, sm: 500, md: 600 },
           height: { xs: 300, sm: 500, md: 600 },
-          background: "radial-gradient(circle, rgba(144,202,249,0.15) 0%, transparent 70%)",
+          background:
+            "radial-gradient(circle, rgba(144,202,249,0.15) 0%, transparent 70%)",
           pointerEvents: "none",
           zIndex: 0,
         }}
@@ -40,7 +41,8 @@ export function HeroSection() {
           width: { xs: 80, sm: 100 },
           height: { xs: 80, sm: 100 },
           borderRadius: "24px",
-          background: "linear-gradient(135deg, rgba(144,202,249,0.2) 0%, rgba(144,202,249,0.05) 100%)",
+          background:
+            "linear-gradient(135deg, rgba(144,202,249,0.2) 0%, rgba(144,202,249,0.05) 100%)",
           border: "1px solid rgba(144,202,249,0.3)",
           mb: 4,
           position: "relative",
@@ -67,7 +69,8 @@ export function HeroSection() {
           mb: 2,
           position: "relative",
           zIndex: 1,
-          background: "linear-gradient(135deg, #ffffff 0%, rgba(255,255,255,0.8) 100%)",
+          background:
+            "linear-gradient(135deg, #ffffff 0%, rgba(255,255,255,0.8) 100%)",
           backgroundClip: "text",
           WebkitBackgroundClip: "text",
           WebkitTextFillColor: "transparent",
@@ -91,8 +94,9 @@ export function HeroSection() {
           zIndex: 1,
         }}
       >
-        Progressive overload on autopilot. Build your program once and let the app
-        automatically adjust your weights each week so you keep getting stronger.
+        Progressive overload on autopilot. Build your program once and let the
+        app automatically adjust your weights each week so you keep getting
+        stronger.
       </Typography>
 
       {/* CTA Buttons */}
@@ -120,7 +124,8 @@ export function HeroSection() {
                 background: "linear-gradient(135deg, #90caf9 0%, #64b5f6 100%)",
                 boxShadow: "0 4px 20px rgba(144,202,249,0.3)",
                 "&:hover": {
-                  background: "linear-gradient(135deg, #64b5f6 0%, #42a5f5 100%)",
+                  background:
+                    "linear-gradient(135deg, #64b5f6 0%, #42a5f5 100%)",
                   boxShadow: "0 6px 30px rgba(144,202,249,0.4)",
                 },
               }}
@@ -167,12 +172,13 @@ export function HeroSection() {
                 background: "linear-gradient(135deg, #90caf9 0%, #64b5f6 100%)",
                 boxShadow: "0 4px 20px rgba(144,202,249,0.3)",
                 "&:hover": {
-                  background: "linear-gradient(135deg, #64b5f6 0%, #42a5f5 100%)",
+                  background:
+                    "linear-gradient(135deg, #64b5f6 0%, #42a5f5 100%)",
                   boxShadow: "0 6px 30px rgba(144,202,249,0.4)",
                 },
               }}
             >
-              Get Started Free
+              Get Started
             </Button>
             <Button
               component={Link}

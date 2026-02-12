@@ -54,7 +54,7 @@ export function CTASection() {
           },
         }}
       >
-        {user ? "Go to Dashboard" : "Get Started Free"}
+        {user ? "Go to Dashboard" : "Get Started"}
       </Button>
     </Box>
   );

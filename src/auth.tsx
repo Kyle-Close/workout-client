@@ -20,6 +20,7 @@ type AuthContextType = {
   isAuthenticated: boolean;
   login: (username: string, password: string) => Promise<void>;
   register: (username: string, password: string) => Promise<void>;
+  demoLogin: () => Promise<void>;
   logout: () => void;
 };
 
@@ -86,9 +87,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setToken(data.access_token);
   }, []);
 
+  const demoLogin = useCallback(async () => {
+    const res = await fetch(`${BASE_URL}/demo-login`, {
+      method: "POST",
+    });
+    if (!res.ok) {
+      throw new Error("Demo login failed");
+    }
+    const data = await res.json();
+    localStorage.setItem("token", data.access_token);
+    setToken(data.access_token);
+  }, []);
+
   return (
     <AuthContext.Provider
-      value={{ token, user, isAuthenticated: !!token, login, register, logout }}
+      value={{ token, user, isAuthenticated: !!token, login, register, demoLogin, logout }}
     >
       {children}
     </AuthContext.Provider>

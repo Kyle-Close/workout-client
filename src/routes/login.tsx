@@ -4,6 +4,8 @@ import {
   Alert,
   Box,
   Button,
+  CircularProgress,
+  Divider,
   Tab,
   Tabs,
   TextField,
@@ -22,7 +24,8 @@ function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const { login, register } = useAuth();
+  const [demoLoading, setDemoLoading] = useState(false);
+  const { login, register, demoLogin } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -129,7 +132,7 @@ function LoginPage() {
             type="submit"
             variant="contained"
             fullWidth
-            disabled={loading || !username || !password}
+            disabled={loading || demoLoading || !username || !password}
             sx={{ py: 1.2, fontWeight: 600 }}
           >
             {loading
@@ -142,6 +145,56 @@ function LoginPage() {
           </Button>
         </Box>
       </Box>
+
+      <Divider
+        sx={{
+          width: "100%",
+          maxWidth: 400,
+          my: 3,
+          "&::before, &::after": {
+            borderColor: "rgba(255,255,255,0.08)",
+          },
+          color: "text.secondary",
+          fontSize: "0.75rem",
+        }}
+      >
+        or
+      </Divider>
+
+      <Button
+        variant="text"
+        size="small"
+        disabled={loading || demoLoading}
+        onClick={async () => {
+          setError(null);
+          setDemoLoading(true);
+          try {
+            await demoLogin();
+            navigate({ to: "/" });
+          } catch (err) {
+            setError(
+              err instanceof Error ? err.message : "An error occurred",
+            );
+          } finally {
+            setDemoLoading(false);
+          }
+        }}
+        sx={{
+          color: "text.secondary",
+          fontSize: "0.85rem",
+          textTransform: "none",
+          "&:hover": { color: "primary.main" },
+        }}
+      >
+        {demoLoading ? (
+          <>
+            <CircularProgress size={16} sx={{ mr: 1 }} />
+            Loading demo...
+          </>
+        ) : (
+          "Try Demo"
+        )}
+      </Button>
     </Box>
   );
 }

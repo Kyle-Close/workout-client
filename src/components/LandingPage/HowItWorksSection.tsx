@@ -29,7 +29,8 @@ function Step({ number, title, description, isLast = false }: StepProps) {
             left: 56,
             right: 0,
             height: 2,
-            background: "linear-gradient(90deg, rgba(144,202,249,0.5) 0%, rgba(144,202,249,0.1) 100%)",
+            background:
+              "linear-gradient(90deg, rgba(144,202,249,0.5) 0%, rgba(144,202,249,0.1) 100%)",
           }}
         />
       )}
@@ -43,7 +44,8 @@ function Step({ number, title, description, isLast = false }: StepProps) {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "linear-gradient(135deg, rgba(144,202,249,0.2) 0%, rgba(144,202,249,0.05) 100%)",
+          background:
+            "linear-gradient(135deg, rgba(144,202,249,0.2) 0%, rgba(144,202,249,0.05) 100%)",
           border: "2px solid rgba(144,202,249,0.5)",
           flexShrink: 0,
           mb: { xs: 2, sm: 0 },
@@ -94,17 +96,20 @@ const steps = [
   {
     number: "1",
     title: "Create Your Program",
-    description: "Set up your exercises with target sets, reps, and starting weights.",
+    description:
+      "Set up your exercises with target sets, reps, and starting weights.",
   },
   {
     number: "2",
     title: "Log Your Workouts",
-    description: "Complete your sets and the app tracks your progress automatically.",
+    description:
+      "Complete your sets and the app tracks your progress automatically.",
   },
   {
     number: "3",
     title: "Get Stronger",
-    description: "Hit your targets and watch your weights increase automatically each week.",
+    description:
+      "Hit your targets and watch your weights increase automatically each week.",
   },
 ];
 
@@ -131,17 +136,6 @@ export function HowItWorksSection() {
         >
           How It Works
         </Typography>
-        <Typography
-          variant="h2"
-          sx={{
-            fontSize: { xs: "1.75rem", sm: "2.25rem" },
-            fontWeight: 700,
-            textAlign: "center",
-            color: "white",
-          }}
-        >
-          Simple as 1-2-3
-        </Typography>
       </Stack>
 
       <Stack
@@ -150,7 +144,11 @@ export function HowItWorksSection() {
         justifyContent="space-between"
       >
         {steps.map((step, index) => (
-          <Step key={step.number} {...step} isLast={index === steps.length - 1} />
+          <Step
+            key={step.number}
+            {...step}
+            isLast={index === steps.length - 1}
+          />
         ))}
       </Stack>
     </Box>
